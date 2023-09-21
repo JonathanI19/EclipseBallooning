@@ -1,0 +1,47 @@
+@startuml SunTracker
+
+' Define classes
+
+class PiCamera <existing>
+{
+}
+
+class CameraProcessor <new>
+{
+    - bitmap : current_input_frame
+    - tuple(double) : output_vals
+    - split_frame()
+    - compute_intensity() -> tuple(double)
+    + __init__()
+    + set_input_frame(bitmap : input)
+    + get_computed_values() -> tuple(double)
+}
+
+class QuadCellDecoder <new>
+{
+    - compute_variance()
+    - locate_brightest_quadrants() -> tuple(bool)
+    - choose_servo_direction() -> enum 
+    - ServoController : servo_controller
+    + __init__()
+    + locate_brightest_quadrant(tuple(double) : data)
+}
+
+class ServoController <new>
+{
+    - list(ServoMotor) : servo_motors
+    + __init__()
+    + set_input_direction(enum)
+}
+
+class ServoMotor <new>
+{
+    + __init__()
+}
+
+' Define class relations
+
+PiCamera ..> CameraProcessor
+CameraProcessor ..> QuadCellDecoder
+QuadCellDecoder *-- ServoController
+ServoController o-- ServoMotor : many
