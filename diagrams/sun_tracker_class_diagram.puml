@@ -2,36 +2,65 @@
 
 ' Define classes
 
+package "sun_tracker.py" #DDDDDD
+{
+
 class PiCamera <existing>
 {
 }
 
 class CameraProcessor <new>
 {
-    - bitmap : current_input_frame
-    - tuple(double) : output_vals
-    - split_frame()
-    - compute_intensity() -> tuple(double)
+    - current_frame : bitmap 
+    - {field}intensity_vals : tuple(double)
+    + split_frame() -> None
+    + compute_average_intensities() -> tuple(double)
     + __init__()
-    + set_input_frame(bitmap : input)
+    + set_current_frame(\n\
+        input_frame : bitmap) -> None
+    + get_computed_values() -> tuple(double)
+}
+
+class QuadCellProcessor <new>
+{
+    + __init__()
+    + set_current_voltages(\n\
+        input_voltages : tuple(double)) -> None
     + get_computed_values() -> tuple(double)
 }
 
 class QuadCellDecoder <new>
 {
-    - compute_variance()
-    - locate_brightest_quadrants() -> tuple(bool)
-    - choose_servo_direction() -> enum 
-    - ServoController : servo_controller
+    - quadrant_variance : double
+    - {field}brightest_quadrants : tuple(bool)
+    - servo_controller : ServoController
+    + compute_quadrant_variance()
+    + locate_brightest_quadrants()
+    + decode_brightness_into_direction()
     + __init__()
-    + locate_brightest_quadrant(tuple(double) : data)
+    + set_intensity_values(\n\
+        input_intensities : tuple(double)) -> None
+}
+
+enum SERVO_DIRECTION
+{
+    PAN_UP
+    PAN_DOWN
+    PAN_LEFT
+    PAN_RIGHT
+    TILT_UP
+    TILT_DOWN
+    NO_MOVE
 }
 
 class ServoController <new>
 {
-    - list(ServoMotor) : servo_motors
+    - current_direction : SERVO_DIRECTION
+    - {field}servo_motors : list(ServoMotor)
+    + move_servos() -> None
     + __init__()
-    + set_input_direction(enum)
+    + set_current_direction(\n\
+        current_direction : SERVO_DIRECTION)
 }
 
 class ServoMotor <new>
@@ -43,5 +72,10 @@ class ServoMotor <new>
 
 PiCamera ..> CameraProcessor
 CameraProcessor ..> QuadCellDecoder
+QuadCellProcessor ..> QuadCellDecoder
 QuadCellDecoder *-- ServoController
-ServoController o-- ServoMotor : many
+QuadCellDecoder .. SERVO_DIRECTION
+ServoController .. SERVO_DIRECTION
+ServoController *-- ServoMotor : many
+
+}
