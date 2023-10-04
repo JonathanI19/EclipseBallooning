@@ -10,13 +10,10 @@ from enum import Enum
 
 class SERVO_DIRECTION(Enum):
     """The SERVO_DIRECTION enumeration."""
-    PAN_UP = 0
-    PAN_DOWN = 1
-    PAN_LEFT = 2
-    PAN_RIGHT = 3
-    TILT_UP = 4
-    TILT_DOWN = 5
-    NO_MOVE = 6
+    PAN_LEFT = 1
+    PAN_RIGHT = 2
+    TILT_UP = 3
+    TILT_DOWN = 4
 
 class ServoController:
     """ The ServoController class.
@@ -39,8 +36,8 @@ class ServoController:
         """
 
         # process all commands in the queue
-        for cmd in self.__movement_queue:
-            pass
+        while len(self.__movement_queue):
+            self.__movement_queue.pop(0)
 
     def push_movement_command(self, new_cmd):
 
@@ -50,3 +47,11 @@ class ServoController:
         
         # push the command
         self.__movement_queue.append(new_cmd)
+
+    def view_movement_queue(self):
+        """ Gets the __movement_queue member variable.
+
+        @return    list(SERVO_DIRECTION)
+        """
+        return self.__movement_queue
+    

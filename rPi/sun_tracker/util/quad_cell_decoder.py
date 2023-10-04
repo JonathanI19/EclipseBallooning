@@ -1,4 +1,4 @@
-# @file: quad_cell_decoder
+# @file: quad_cell_decoder.py
 #
 # @brief: Decoder module that locates brightest quadrant
 #         and instructs servo motor to take action. 
@@ -8,6 +8,7 @@
 from math import sqrt
 from statistics import variance
 from servo_controller import SERVO_DIRECTION
+from servo_controller import ServoController
 
 class QuadCellDecoder:
     """ The QuadCellDecoder class.
@@ -21,8 +22,8 @@ class QuadCellDecoder:
 
         self.__quadrant_intensities = ()
         self.__quadrant_variance = 0
-        self.__brightest_quadrants = ()
-        self.__servo_controller = None
+        self.__brightest_quadrants = []
+        self.__servo_controller = ServoController()
 
         # Assume tuple index corresponds to quadrant number plus 1:
         # ([0], [1], [2], [3])
@@ -51,6 +52,9 @@ class QuadCellDecoder:
         if len(input_intensities) != 4:
             raise Exception(f"[ERROR] Invalid tuple of size {len(input_intensities)} provided.")
         
+        # clear previous data
+        self.__quadrant_intensities = ()
+        
         # save the tuple values
         self.__quadrant_intensities = input_intensities
 
@@ -68,20 +72,33 @@ class QuadCellDecoder:
         @return    None
         """
 
+        # Step 0) Clear previous data
+        self.__brightest_quadrants.clear()
+
         # Step 1) Find the highest intensity value, which
         #         corresponds to the brightest quadrant.
         max_intensity = max(self.__quadrant_intensities)
 
-        # Step 2) Find any other intensity values that are
-        #         within one standard deviation of the
-        #         brightest value.
+        # Step 2) Determine if data is "widely dispersed" (i.e.,
+        #         the standard deviation is greater than 10% the
+        #         the maximum value)
         std_dev = sqrt(self.__quadrant_variance)
-        threshold = max_intensity - std_dev
-        self.__brightest_quadrants = (True if val >= threshold else False for val in self.__quadrant_intensities)
+
+        if std_dev/max_intensity < 0.1:
+
+            # if standard deviation is not high, assume no movement is needed
+            self.__brightest_quadrants = [True, True, True, True]
+
+        else:
+            
+            # Step 3) Find any other intensity values that are
+            #         within one standard deviation of the
+            #         brightest value.
+            threshold = max_intensity - std_dev
+            self.__brightest_quadrants = [True if val >= threshold else False for val in self.__quadrant_intensities]
 
     def decode_brightness_into_direction(self):
         """ Determines servo motor inputs based on quadrant brightness.
-
 
         @return    None
         """
@@ -91,38 +108,76 @@ class QuadCellDecoder:
         # we change from a tuple to an int
         servo_code = 0
         for i, val in enumerate(self.__brightest_quadrants):
-            servo_code = servo_code + (pow(2, (4-i-1))*val)
+            servo_code = servo_code + (val*pow(2, (4-i-1)))
 
         # decode the binary string
         if servo_code == 0b0000:
-            moves = [SERVO_DIRECTION.NO_MOVE]
+            pass
         elif servo_code == 0b0001:
-            moves = [SERVO_DIRECTION.PAN_RIGHT, SERVO_DIRECTION.TILT_DOWN]
+            self.__servo_controller.push_movement_command(SERVO_DIRECTION.PAN_RIGHT)
+            self.__servo_controller.push_movement_command(SERVO_DIRECTION.TILT_DOWN)
         elif servo_code == 0b0010:
-            moves = [SERVO_DIRECTION.PAN_LEFT, SERVO_DIRECTION.TILT_DOWN]
+            self.__servo_controller.push_movement_command(SERVO_DIRECTION.PAN_LEFT)
+            self.__servo_controller.push_movement_command(SERVO_DIRECTION.TILT_DOWN)
         elif servo_code == 0b0011:
-            moves = [SERVO_DIRECTION.TILT_DOWN]
+            self.__servo_controller.push_movement_command(SERVO_DIRECTION.TILT_DOWN)
         elif servo_code == 0b0100:
-            moves = [SERVO_DIRECTION.PAN_LEFT, SERVO_DIRECTION.TILT_UP]
+            self.__servo_controller.push_movement_command(SERVO_DIRECTION.PAN_LEFT)
+            self.__servo_controller.push_movement_command(SERVO_DIRECTION.TILT_UP)
         elif servo_code == 0b0101:
-            moves = [SERVO_DIRECTION.NO_MOVE]
+            pass
         elif servo_code == 0b0110:
-            moves = [SERVO_DIRECTION.PAN_LEFT]
+            self.__servo_controller.push_movement_command(SERVO_DIRECTION.PAN_LEFT)
+            pass
         elif servo_code == 0b0111:
-            moves = [SERVO_DIRECTION.PAN_LEFT, SERVO_DIRECTION.TILT_DOWN]
+            self.__servo_controller.push_movement_command(SERVO_DIRECTION.PAN_LEFT)
+            self.__servo_controller.push_movement_command(SERVO_DIRECTION.TILT_DOWN)
         elif servo_code == 0b1000:
-            moves = [SERVO_DIRECTION.PAN_RIGHT, SERVO_DIRECTION.TILT_UP]
+            self.__servo_controller.push_movement_command(SERVO_DIRECTION.PAN_RIGHT)
+            self.__servo_controller.push_movement_command(SERVO_DIRECTION.TILT_UP)
         elif servo_code == 0b1001:
-            moves = [SERVO_DIRECTION.PAN_RIGHT]
+            self.__servo_controller.push_movement_command(SERVO_DIRECTION.PAN_RIGHT)
         elif servo_code == 0b1010:
-            moves = [SERVO_DIRECTION.NO_MOVE]
+            pass
         elif servo_code == 0b1011:
-            moves = [SERVO_DIRECTION.PAN_RIGHT, SERVO_DIRECTION.TILT_DOWN]
+            self.__servo_controller.push_movement_command(SERVO_DIRECTION.PAN_RIGHT)
+            self.__servo_controller.push_movement_command(SERVO_DIRECTION.TILT_DOWN)
         elif servo_code == 0b1100:
-            moves = [SERVO_DIRECTION.TILT_UP]
+            self.__servo_controller.push_movement_command(SERVO_DIRECTION.TILT_UP)
         elif servo_code == 0b1101:
-            moves = [SERVO_DIRECTION.PAN_RIGHT, SERVO_DIRECTION.TILT_UP]
+            self.__servo_controller.push_movement_command(SERVO_DIRECTION.PAN_RIGHT)
+            self.__servo_controller.push_movement_command(SERVO_DIRECTION.TILT_UP)
         elif servo_code == 0b1110:
-            moves = [SERVO_DIRECTION.PAN_LEFT, SERVO_DIRECTION.TILT_UP]
+            self.__servo_controller.push_movement_command(SERVO_DIRECTION.PAN_LEFT)
+            self.__servo_controller.push_movement_command(SERVO_DIRECTION.TILT_UP)
         elif servo_code == 0b1111:
-            moves = [SERVO_DIRECTION.NO_MOVE]
+            pass
+
+    def get_quadrant_intensities(self):
+        """ Gets __quadrant_intensities member variable.
+
+        @return    tuple(double)
+        """
+        return self.__quadrant_intensities
+    
+    def get_quadrant_variance(self):
+        """ Gets __quadrant_variance member variable.
+
+        @return    double
+        """
+        return self.__quadrant_variance
+    
+    def get_brightest_quadrants(self):
+        """ Gets __brightest_quadrants member variable.
+
+        @return    tuple(bool)
+        """
+        return self.__brightest_quadrants
+        
+    def get_servo_controller(self):
+        """ Gets __servo_controller member variable.
+
+        @return    tuple(bool)
+        """
+        return self.__servo_controller
+    
