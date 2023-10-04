@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+from util.camera_processor import Camera_Processor
 
 def main():
     # This will return video from the first webcam on your computer.
@@ -17,10 +18,12 @@ def main():
     
     size = (frame_width, frame_height) 
     
-    # Define the codec and create VideoWriter object
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-    #out = cv2.VideoWriter('output.mp4', fourcc, 20.0, size)
-    out = cv2.VideoWriter('output.mp4', cv2.VideoWriter_fourcc(*'mp4v'), 24, size)
+    fps = 24
+    out = cv2.VideoWriter('output.mp4', cv2.VideoWriter_fourcc(*'mp4v'), fps, size)
+
+    frame_count = 0
+    samples_per_second = 1
+    cProc = Camera_Processor(size)
 
     # loop runs if capturing has been initialized. 
     while(True):
@@ -28,20 +31,23 @@ def main():
         # ret checks return at each frame
         ret, frame = cap.read() 
         if (ret == True):
-            # Converts to grayscale space, OCV reads colors as BGR
-            # frame is converted to gray
-            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            
+            frame_count+=1
             # output the frame
             out.write(frame) 
             
+            if(frame_count == (fps/samples_per_second)):
+                frame_count = 0
+                cProc.set_frame(frame)
+                cProc.convert_frame()
+                (q0,q1,q2,q3) = cProc.split_frame()
+                cv2.imshow('q0', q0)
+                cv2.imshow('q1', q1)
+                cv2.imshow('q2', q2)
+                cv2.imshow('q3', q3)
+                
             # The original input frame is shown in the window 
             cv2.imshow('Original', frame)
         
-            # The window showing the operated video stream 
-            cv2.imshow('frame', gray)
-        
-            
             # Wait for 'a' key to stop the program 
             if cv2.waitKey(1) & 0xFF == ord('a'):
                 break
