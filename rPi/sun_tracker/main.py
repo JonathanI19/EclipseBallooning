@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from util.camera_processor import Camera_Processor
+from util.camera_processor import CameraProcessor
 
 DEMO = False
 
@@ -30,8 +30,8 @@ def main():
     frame_count = 0
     samples_per_second = 3
 
-    # Create Camera_Processor object and pass in size of frame
-    cProc = Camera_Processor(size)
+    # Create CameraProcessor object and pass in size of frame
+    cProc = CameraProcessor(size)
 
     # loop runs if capturing has been initialized. 
     while(True):

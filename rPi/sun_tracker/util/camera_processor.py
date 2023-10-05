@@ -2,7 +2,7 @@ import cv2
 from statistics import mean
 import numpy as np
 
-class Camera_Processor:
+class CameraProcessor:
     """Contains processing information to analyze quadrants of an image.
     """ 
 
