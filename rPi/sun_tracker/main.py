@@ -1,8 +1,17 @@
 import cv2
 import numpy as np
 from util.camera_processor import CameraProcessor
+from util.quad_cell_decoder import QuadCellDecoder
 
 DEMO = False
+
+def process_current_frame(qcDec, brightness_vals):
+
+    qcDec.set_intensity_values(brightness_vals)
+    qcDec.compute_quadrant_variance()
+    qcDec.locate_brightest_quadrants()
+    qcDec.decode_brightness_into_direction()
+    qcDec.get_servo_controller().move_servos()
 
 def main():
 
@@ -33,6 +42,9 @@ def main():
     # Create CameraProcessor object and pass in size of frame
     cProc = CameraProcessor(size)
 
+    # Create a QuadCellDecoder object to process the input frame
+    qcDec = QuadCellDecoder()
+
     # loop runs if capturing has been initialized. 
     while(True):
 
@@ -49,7 +61,6 @@ def main():
             # output the frame
             out.write(frame) 
             
-
             # The original input frame is shown in the window 
             cv2.imshow('Original', frame)
             
@@ -69,6 +80,9 @@ def main():
             
                 # Getting double of avg brightness for each quadrant
                 v0, v1, v2, v3 = cProc.get_brightness()
+
+                # Process current frame
+                process_current_frame(qcDec, (v0, v1, v2, v3))
 
                 # Print out avg brightness values of quadrants if DEMO is True
                 print(v0, v1, v2, v3)
