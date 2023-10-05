@@ -7,8 +7,8 @@
 # imports
 from math import sqrt
 from statistics import variance
-from servo_controller import SERVO_DIRECTION
-from servo_controller import ServoController
+from .servo_controller import SERVO_DIRECTION
+from .servo_controller import ServoController
 
 class QuadCellDecoder:
     """ The QuadCellDecoder class.
@@ -24,6 +24,9 @@ class QuadCellDecoder:
         self.__quadrant_variance = 0
         self.__brightest_quadrants = []
         self.__servo_controller = ServoController()
+
+        # Coefficient for sensitivity modification
+        self.k = 1
 
         # Assume tuple index corresponds to quadrant number plus 1:
         # ([0], [1], [2], [3])
@@ -94,7 +97,7 @@ class QuadCellDecoder:
             # Step 3) Find any other intensity values that are
             #         within one standard deviation of the
             #         brightest value.
-            threshold = max_intensity - std_dev
+            threshold = max_intensity - (self.k*std_dev)
             self.__brightest_quadrants = [True if val >= threshold else False for val in self.__quadrant_intensities]
 
     def decode_brightness_into_direction(self):

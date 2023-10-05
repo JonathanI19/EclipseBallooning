@@ -3,7 +3,7 @@ import numpy as np
 from util.camera_processor import CameraProcessor
 from util.quad_cell_decoder import QuadCellDecoder
 
-DEMO = False
+DEMO = True
 
 def process_current_frame(qcDec, brightness_vals):
 
