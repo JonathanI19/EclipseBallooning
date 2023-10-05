@@ -35,10 +35,32 @@ class CameraProcessor:
         """        
         self.__frame = frame
 
+    def get_frame(self):
+        """gets __frame member variable
+
+        Returns:
+            List: Frame data
+        """        
+        return self.__frame
+
     def convert_frame(self):
         """Converts frame to HSV color scheme
         """        
-        self.__frame = cv2.cvtColor(self.__frame, cv2.COLOR_RGB2HSV)
+        self.set_frame(cv2.cvtColor(self.__frame, cv2.COLOR_RGB2HSV))
+
+    def set_quadrants(self, q0, q1, q2, q3):
+        """Sets quadrant data
+
+        Args:
+            q0 (list): q0 frame data
+            q1 (list): q1 frame data
+            q2 (list): q2 frame data
+            q3 (list): q3 frame data
+        """
+        self.__q0 = q0
+        self.__q1 = q1
+        self.__q2 = q2
+        self.__q3 = q3
 
     def split_frame(self):
         """Splits frame into four separate quadrants
@@ -54,45 +76,56 @@ class CameraProcessor:
         #        [2]   |   [3]
         #              |
                
-        self.__q0 = self.__frame[:self.half_h, self.half_w:]
-        self.__q1 = self.__frame[:self.half_h, :self.half_w]
-        self.__q2 = self.__frame[self.half_h:, :self.half_w]
-        self.__q3 = self.__frame[self.half_h:, self.half_w:]
+        self.set_quadrants(self.__frame[:self.half_h, self.half_w:], self.__frame[:self.half_h, :self.half_w], self.__frame[self.half_h:, :self.half_w], self.__frame[self.half_h:, self.half_w:])
+    
+    def get_quadrants(self):
+        """gets __q0, __q1, __q2, __q3 member variables
+
+        Returns:
+            Tuple: Quadrants
+        """         
+    
         return(self.__q0, self.__q1, self.__q2, self.__q3)
 
 
-    def get_brightness(self):
+    def compute_brightness(self):
         """Calculates avg value of each quadrant
 
         Returns:
             Tuple of Doubles: Avg value of each quadrant
         """        
-        v0 = np.sum(self.__q0[:,:,2])
+
+        q0, q1, q2, q3 = self.get_quadrants()
+
+        v0 = np.sum(q0[:,:,2])
         avg_v0 = v0 / self.pxl
 
-        v1 = np.sum(self.__q1[:,:,2])
+        v1 = np.sum(q1[:,:,2])
         avg_v1 = v1 / self.pxl
 
-        v2 = np.sum(self.__q2[:,:,2])
+        v2 = np.sum(q2[:,:,2])
         avg_v2 = v2 / self.pxl
 
-        v3 = np.sum(self.__q3[:,:,2])
+        v3 = np.sum(q3[:,:,2])
         avg_v3 = v3 / self.pxl
 
         return(avg_v0, avg_v1, avg_v2, avg_v3)
     
-    def recombine(self, quadrants):
-        """Recombines split quadrants into a single frame
+    def recombine(self, q0, q1, q2, q3):
+        """FOR DEMO ONLY - Recombines split quadrants into a single frame
 
         Args:
-            quadrants (list): List of quadrant data
+            q0: Quadrant 0 frame data
+            q1: Quadrant 1 frame data
+            q2: Quadrant 2 frame data  
+            q3: Quadrant 3 frame data
 
         Returns:
             List: New frame to be displayed
         """        
-        new_frame = self.__frame
-        new_frame[:self.half_h, self.half_w:] = quadrants[0]
-        new_frame[:self.half_h, :self.half_w] = quadrants[1]
-        new_frame[self.half_h:, :self.half_w] = quadrants[2]
-        new_frame[self.half_h:, self.half_w:] = quadrants[3]
+        new_frame = self.get_frame()
+        new_frame[:self.half_h, self.half_w:] = q0
+        new_frame[:self.half_h, :self.half_w] = q1
+        new_frame[self.half_h:, :self.half_w] = q2
+        new_frame[self.half_h:, self.half_w:] = q3
         return new_frame

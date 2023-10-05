@@ -69,7 +69,8 @@ def main():
                 frame_count = 0
                 cProc.set_frame(frame)
                 cProc.convert_frame()
-                (q0,q1,q2,q3) = cProc.split_frame()
+                cProc.split_frame()
+                (q0,q1,q2,q3) = cProc.get_quadrants()
 
                 # Display Quadrant HSV if DEMO is True
                 if DEMO is True:
@@ -79,26 +80,32 @@ def main():
                     cv2.imshow('q3', q3)
             
                 # Getting double of avg brightness for each quadrant
-                v0, v1, v2, v3 = cProc.get_brightness()
+                v0, v1, v2, v3 = cProc.compute_brightness()
 
                 # Process current frame
                 process_current_frame(qcDec, (v0, v1, v2, v3))
 
                 # Print out avg brightness values of quadrants if DEMO is True
-                print(v0, v1, v2, v3)
+                # print(v0, v1, v2, v3)
 
-                # Showcases brightest quadrant if DEMO is True
+                # Showcases brightest quadrant(s) if DEMO is True
                 if DEMO is True:
-                    # converting to list and getting index of brightest
-                    values = [v0,v1,v2,v3]
-                    quadrants = [q0,q1,q2,q3]
-                    brightest = np.argmax(values)
 
-                    # Converting brightest back to original color space
-                    quadrants[brightest] = cv2.cvtColor(quadrants[brightest], cv2.COLOR_HSV2RGB)
-
+                    # Getting results of brightness computation
+                    q0_is_bright, q1_is_bright, q2_is_bright, q3_is_bright = qcDec.get_brightest_quadrants()
+                    
+                    # Converting quadrants based on brightness results
+                    if q0_is_bright is True:
+                        q0 = cv2.cvtColor(q0, cv2.COLOR_HSV2RGB)       
+                    if q1_is_bright is True:
+                        q1 = cv2.cvtColor(q1, cv2.COLOR_HSV2RGB)
+                    if q2_is_bright is True:
+                        q2 = cv2.cvtColor(q2, cv2.COLOR_HSV2RGB)
+                    if q3_is_bright is True:
+                        q3 = cv2.cvtColor(q3, cv2.COLOR_HSV2RGB)
+                    
                     # Example of recombining frame
-                    new_frame = cProc.recombine(quadrants)
+                    new_frame = cProc.recombine(q0, q1, q2, q3)
 
                     cv2.imshow("New Frame", new_frame)
 
