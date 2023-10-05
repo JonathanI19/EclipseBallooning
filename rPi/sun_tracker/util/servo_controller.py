@@ -36,8 +36,9 @@ class ServoController:
         """
 
         # process all commands in the queue
+        print("Executing movement commands for input frame ...")
         while len(self.__movement_queue):
-            self.__movement_queue.pop(0)
+            print(self.__movement_queue.pop(0))
 
     def push_movement_command(self, new_cmd):
 
