@@ -42,3 +42,11 @@ class Camera_Processor:
         avg_v3 = v3 / self.pxl
 
         return(avg_v0, avg_v1, avg_v2, avg_v3)
+    
+    def recombine(self, quadrants):
+        new_frame = self.__frame
+        new_frame[:self.half_h, self.half_w:] = quadrants[0]
+        new_frame[:self.half_h, :self.half_w] = quadrants[1]
+        new_frame[self.half_h:, :self.half_w] = quadrants[2]
+        new_frame[self.half_h:, self.half_w:] = quadrants[3]
+        return new_frame
