@@ -17,8 +17,13 @@ class QuadCellDecoder:
     and instructs servo motor to take action.
     """
 
-    def __init__(self, k = 1):
-        """ Constructor """
+    def __init__(self, std_dev_coefficient = 1, movement_cutoff = 0.1):
+        """Constructor
+
+        Args:
+            std_dev_coefficient (int, optional): Modifies senstitivity of brightest quadrant(s) detection. Defaults to 1.
+            movement_cutoff (float, optional): Modifies sensitivity of threshold where movement stops. Defaults to 0.1.
+        """    
 
         self.__quadrant_intensities = ()
         self.__quadrant_variance = 0
@@ -26,7 +31,10 @@ class QuadCellDecoder:
         self.__servo_controller = ServoController()
 
         # Coefficient for sensitivity modification
-        self.k = k
+        self.std_dev_coefficient = std_dev_coefficient
+
+        # Coefficient for movement cutoff
+        self.movement_cutoff = movement_cutoff
 
         # Assume tuple index corresponds to quadrant number plus 1:
         # ([0], [1], [2], [3])
@@ -87,7 +95,7 @@ class QuadCellDecoder:
         #         the maximum value)
         std_dev = sqrt(self.__quadrant_variance)
 
-        if std_dev/max_intensity < 0.1:
+        if std_dev/max_intensity < self.movement_cutoff:
 
             # if standard deviation is not high, assume no movement is needed
             self.__brightest_quadrants = [True, True, True, True]
@@ -97,7 +105,7 @@ class QuadCellDecoder:
             # Step 3) Find any other intensity values that are
             #         within one standard deviation of the
             #         brightest value.
-            threshold = max_intensity - (self.k*std_dev)
+            threshold = max_intensity - (self.std_dev_coefficient*std_dev)
             self.__brightest_quadrants = [True if val >= threshold else False for val in self.__quadrant_intensities]
 
     def decode_brightness_into_direction(self):

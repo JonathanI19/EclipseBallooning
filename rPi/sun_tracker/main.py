@@ -37,13 +37,13 @@ def main():
 
     # Variables for sampling
     frame_count = 0
-    samples_per_second = 3
+    samples_per_second = 24
 
     # Create CameraProcessor object and pass in size of frame
     cProc = CameraProcessor(size)
 
     # Create a QuadCellDecoder object to process the input frame
-    qcDec = QuadCellDecoder(1)
+    qcDec = QuadCellDecoder()
 
     # loop runs if capturing has been initialized. 
     while(True):
