@@ -17,7 +17,7 @@ class QuadCellDecoder:
     and instructs servo motor to take action.
     """
 
-    def __init__(self):
+    def __init__(self, k = 1):
         """ Constructor """
 
         self.__quadrant_intensities = ()
@@ -26,7 +26,7 @@ class QuadCellDecoder:
         self.__servo_controller = ServoController()
 
         # Coefficient for sensitivity modification
-        self.k = 1
+        self.k = k
 
         # Assume tuple index corresponds to quadrant number plus 1:
         # ([0], [1], [2], [3])

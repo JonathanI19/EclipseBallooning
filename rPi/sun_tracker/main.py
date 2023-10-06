@@ -43,7 +43,7 @@ def main():
     cProc = CameraProcessor(size)
 
     # Create a QuadCellDecoder object to process the input frame
-    qcDec = QuadCellDecoder()
+    qcDec = QuadCellDecoder(1)
 
     # loop runs if capturing has been initialized. 
     while(True):
