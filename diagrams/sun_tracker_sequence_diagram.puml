@@ -2,8 +2,8 @@
 
 ' Define participants
 participant "Main Program" as mp
-participant "PiCamera" as pc
-participant "Quad-Cell" as qc
+participant "Camera" as cam
+' participant "Quad-Cell" as qc
 participant "CameraProcessor" as cp
 participant "QuadCellProcessor" as qcp
 participant "QuadCellDecoder" as qcd
@@ -11,24 +11,40 @@ participant "ServoController" as sc
 participant "ServoMotor" as sm
 
 ' Define relations and datapath
-alt Data collected via Pi camera
-    pc -> mp : collect current video frame
-    mp -> cp : set_current_frame(input_frame)
-    cp -> cp: split_frame()
-    cp -> cp: compute_average_intensities()
-    mp -> qcp : get_computed_values()
-    mp -> qcd : set_intensity_values(input_intensities)
-else Data collected via quad-cell sensor
-    mp -> qc : collect current voltage readings
-    mp -> qcp : set_current_voltages(input_voltages)
-    mp -> qcp : get_computed_values()
-    mp -> qcd : set_intensity_values(input_intensities)
-end
+' alt Data collected via Pi camera
+'     pc -> mp : collect current video frame
+'     mp -> cp : set_current_frame(input_frame)
+'     cp -> cp: split_frame()
+'     cp -> cp: compute_average_intensities()
+'     mp -> qcp : get_computed_values()
+'     mp -> qcd : set_intensity_values(input_intensities)
+' else Data collected via quad-cell sensor
+'     mp -> qc : collect current voltage readings
+'     mp -> qcp : set_current_voltages(input_voltages)
+'     mp -> qcp : get_computed_values()
+'     mp -> qcd : set_intensity_values(input_intensities)
+'end
+
+mp -> cam : initialize camera and OpenCV2 video capture
+loop For each input frame ...
+mp -> cam : read input frame via OpenCV2 library
+cam --> mp
+mp -> cp : set_frame(frame)
+mp -> cp : convert_frame()
+mp -> cp : split_frame()
+mp -> cp : get_quadrants()
+cp --> mp
+mp -> cp : compute_brightness()
+cp --> mp
+mp -> qcd : set_intensity_values(brightness_vals)
 mp -> qcd : compute_quadrant_variance()
 mp -> qcd : locate_brightest_quadrants()
 mp -> qcd : decode_brightness_into_direction()
-qcd -> sc : set_current_direction(current_direction)
+qcd -> sc : push_movement_command(SERVO_DIRECTION.PAN_LEFT)
+mp -> qcd : get_servo_controller()
+qcd --> mp
 mp -> sc : move_servos()
 sc -> sm : move servos in proper directions\nvia hardware interfacing
+end
 
 @enduml
