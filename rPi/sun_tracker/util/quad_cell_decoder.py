@@ -1,20 +1,20 @@
 # @file: quad_cell_decoder.py
 #
 # @brief: Decoder module that locates brightest quadrant
-#         and instructs servo motor to take action. 
+#         and instructs stepper motor to take action. 
 #
 
 # imports
 from math import sqrt
 from statistics import variance
-from .servo_controller import SERVO_DIRECTION
-from .servo_controller import ServoController
+from stepper_controller import STEPPER_DIRECTION
+from stepper_controller import StepperController
 
 class QuadCellDecoder:
     """ The QuadCellDecoder class.
 
     Decodes inputs to locate brightest quadrant
-    and instructs servo motor to take action.
+    and instructs stepper motor to take action.
     """
 
     def __init__(self, std_dev_coefficient = 1, movement_cutoff = 0.1):
@@ -28,7 +28,7 @@ class QuadCellDecoder:
         self.__quadrant_intensities = ()
         self.__quadrant_variance = 0
         self.__brightest_quadrants = []
-        self.__servo_controller = ServoController()
+        self.__stepper_controller = StepperController()
 
         # Coefficient for sensitivity modification
         self.std_dev_coefficient = std_dev_coefficient
@@ -109,7 +109,7 @@ class QuadCellDecoder:
             self.__brightest_quadrants = [True if val >= threshold else False for val in self.__quadrant_intensities]
 
     def decode_brightness_into_direction(self):
-        """ Determines servo motor inputs based on quadrant brightness.
+        """ Determines stepper motor inputs based on quadrant brightness.
 
         @return    None
         """
@@ -117,51 +117,51 @@ class QuadCellDecoder:
         # at this point, self.__brightest_quadrants encodes which
         # quadrants we consider the 'brightest'; to improve efficiency,
         # we change from a tuple to an int
-        servo_code = 0
+        stepper_code = 0
         for i, val in enumerate(self.__brightest_quadrants):
-            servo_code = servo_code + (val*pow(2, (4-i-1)))
+            stepper_code = stepper_code + (val*pow(2, (4-i-1)))
 
         # decode the binary string
-        if servo_code == 0b0000:
+        if stepper_code == 0b0000:
             pass
-        elif servo_code == 0b0001:
-            self.__servo_controller.push_movement_command(SERVO_DIRECTION.PAN_RIGHT)
-            self.__servo_controller.push_movement_command(SERVO_DIRECTION.TILT_DOWN)
-        elif servo_code == 0b0010:
-            self.__servo_controller.push_movement_command(SERVO_DIRECTION.PAN_LEFT)
-            self.__servo_controller.push_movement_command(SERVO_DIRECTION.TILT_DOWN)
-        elif servo_code == 0b0011:
-            self.__servo_controller.push_movement_command(SERVO_DIRECTION.TILT_DOWN)
-        elif servo_code == 0b0100:
-            self.__servo_controller.push_movement_command(SERVO_DIRECTION.PAN_LEFT)
-            self.__servo_controller.push_movement_command(SERVO_DIRECTION.TILT_UP)
-        elif servo_code == 0b0101:
+        elif stepper_code == 0b0001:
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.TILT_DOWN)
+        elif stepper_code == 0b0010:
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.TILT_DOWN)
+        elif stepper_code == 0b0011:
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.TILT_DOWN)
+        elif stepper_code == 0b0100:
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.TILT_UP)
+        elif stepper_code == 0b0101:
             pass
-        elif servo_code == 0b0110:
-            self.__servo_controller.push_movement_command(SERVO_DIRECTION.PAN_LEFT)
+        elif stepper_code == 0b0110:
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
             pass
-        elif servo_code == 0b0111:
-            self.__servo_controller.push_movement_command(SERVO_DIRECTION.PAN_LEFT)
-            self.__servo_controller.push_movement_command(SERVO_DIRECTION.TILT_DOWN)
-        elif servo_code == 0b1000:
-            self.__servo_controller.push_movement_command(SERVO_DIRECTION.PAN_RIGHT)
-            self.__servo_controller.push_movement_command(SERVO_DIRECTION.TILT_UP)
-        elif servo_code == 0b1001:
-            self.__servo_controller.push_movement_command(SERVO_DIRECTION.PAN_RIGHT)
-        elif servo_code == 0b1010:
+        elif stepper_code == 0b0111:
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.TILT_DOWN)
+        elif stepper_code == 0b1000:
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.TILT_UP)
+        elif stepper_code == 0b1001:
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
+        elif stepper_code == 0b1010:
             pass
-        elif servo_code == 0b1011:
-            self.__servo_controller.push_movement_command(SERVO_DIRECTION.PAN_RIGHT)
-            self.__servo_controller.push_movement_command(SERVO_DIRECTION.TILT_DOWN)
-        elif servo_code == 0b1100:
-            self.__servo_controller.push_movement_command(SERVO_DIRECTION.TILT_UP)
-        elif servo_code == 0b1101:
-            self.__servo_controller.push_movement_command(SERVO_DIRECTION.PAN_RIGHT)
-            self.__servo_controller.push_movement_command(SERVO_DIRECTION.TILT_UP)
-        elif servo_code == 0b1110:
-            self.__servo_controller.push_movement_command(SERVO_DIRECTION.PAN_LEFT)
-            self.__servo_controller.push_movement_command(SERVO_DIRECTION.TILT_UP)
-        elif servo_code == 0b1111:
+        elif stepper_code == 0b1011:
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.TILT_DOWN)
+        elif stepper_code == 0b1100:
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.TILT_UP)
+        elif stepper_code == 0b1101:
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.TILT_UP)
+        elif stepper_code == 0b1110:
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.TILT_UP)
+        elif stepper_code == 0b1111:
             pass
 
     def get_quadrant_intensities(self):
@@ -185,10 +185,10 @@ class QuadCellDecoder:
         """
         return self.__brightest_quadrants
         
-    def get_servo_controller(self):
-        """ Gets __servo_controller member variable.
+    def get_stepper_controller(self):
+        """ Gets __stepper_controller member variable.
 
         @return    tuple(bool)
         """
-        return self.__servo_controller
+        return self.__stepper_controller
     

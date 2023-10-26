@@ -11,7 +11,7 @@ def process_current_frame(qcDec, brightness_vals):
     qcDec.compute_quadrant_variance()
     qcDec.locate_brightest_quadrants()
     qcDec.decode_brightness_into_direction()
-    qcDec.get_servo_controller().move_servos()
+    qcDec.get_stepper_controller().move_steppers()
 
 def main():
 

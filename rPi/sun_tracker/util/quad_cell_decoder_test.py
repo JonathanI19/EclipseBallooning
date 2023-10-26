@@ -6,7 +6,7 @@
 # imports
 import pytest
 from quad_cell_decoder import QuadCellDecoder
-from servo_controller import SERVO_DIRECTION
+from stepper_controller import STEPPER_DIRECTION
 
 class TestQuadCellDecoder:
     """ Test class for QuadCellDecoder.
@@ -218,8 +218,8 @@ class TestQuadCellDecoder:
         quad_cell_decoder_UUT.decode_brightness_into_direction()
 
         # verify output
-        golden_output = [SERVO_DIRECTION.PAN_RIGHT, SERVO_DIRECTION.TILT_DOWN]
-        test_output = quad_cell_decoder_UUT.get_servo_controller().view_movement_queue()
+        golden_output = [STEPPER_DIRECTION.PAN_RIGHT, STEPPER_DIRECTION.TILT_DOWN]
+        test_output = quad_cell_decoder_UUT.get_stepper_controller().view_movement_queue()
         assert len(test_output) == len(golden_output)
         for i in range(0, len(test_output)):
             assert test_output[i] == golden_output[i]
@@ -244,8 +244,8 @@ class TestQuadCellDecoder:
         quad_cell_decoder_UUT.decode_brightness_into_direction()
 
         # verify output
-        golden_output = [SERVO_DIRECTION.PAN_LEFT, SERVO_DIRECTION.TILT_DOWN]
-        test_output = quad_cell_decoder_UUT.get_servo_controller().view_movement_queue()
+        golden_output = [STEPPER_DIRECTION.PAN_LEFT, STEPPER_DIRECTION.TILT_DOWN]
+        test_output = quad_cell_decoder_UUT.get_stepper_controller().view_movement_queue()
         assert len(test_output) == len(golden_output)
         for i in range(0, len(test_output)):
             assert test_output[i] == golden_output[i]
@@ -270,8 +270,8 @@ class TestQuadCellDecoder:
         quad_cell_decoder_UUT.decode_brightness_into_direction()
 
         # verify output
-        golden_output = [SERVO_DIRECTION.TILT_DOWN]
-        test_output = quad_cell_decoder_UUT.get_servo_controller().view_movement_queue()
+        golden_output = [STEPPER_DIRECTION.TILT_DOWN]
+        test_output = quad_cell_decoder_UUT.get_stepper_controller().view_movement_queue()
         assert len(test_output) == len(golden_output)
         for i in range(0, len(test_output)):
             assert test_output[i] == golden_output[i]
@@ -296,8 +296,8 @@ class TestQuadCellDecoder:
         quad_cell_decoder_UUT.decode_brightness_into_direction()
 
         # verify output
-        golden_output = [SERVO_DIRECTION.PAN_LEFT, SERVO_DIRECTION.TILT_UP]
-        test_output = quad_cell_decoder_UUT.get_servo_controller().view_movement_queue()
+        golden_output = [STEPPER_DIRECTION.PAN_LEFT, STEPPER_DIRECTION.TILT_UP]
+        test_output = quad_cell_decoder_UUT.get_stepper_controller().view_movement_queue()
         assert len(test_output) == len(golden_output)
         for i in range(0, len(test_output)):
             assert test_output[i] == golden_output[i]
@@ -323,7 +323,7 @@ class TestQuadCellDecoder:
 
         # verify output
         golden_output = []
-        test_output = quad_cell_decoder_UUT.get_servo_controller().view_movement_queue()
+        test_output = quad_cell_decoder_UUT.get_stepper_controller().view_movement_queue()
         assert len(test_output) == len(golden_output)
         for i in range(0, len(test_output)):
             assert test_output[i] == golden_output[i]
@@ -348,8 +348,8 @@ class TestQuadCellDecoder:
         quad_cell_decoder_UUT.decode_brightness_into_direction()
 
         # verify output
-        golden_output = [SERVO_DIRECTION.PAN_LEFT]
-        test_output = quad_cell_decoder_UUT.get_servo_controller().view_movement_queue()
+        golden_output = [STEPPER_DIRECTION.PAN_LEFT]
+        test_output = quad_cell_decoder_UUT.get_stepper_controller().view_movement_queue()
         assert len(test_output) == len(golden_output)
         for i in range(0, len(test_output)):
             assert test_output[i] == golden_output[i]
@@ -374,8 +374,8 @@ class TestQuadCellDecoder:
         quad_cell_decoder_UUT.decode_brightness_into_direction()
 
         # verify output
-        golden_output = [SERVO_DIRECTION.PAN_LEFT, SERVO_DIRECTION.TILT_DOWN]
-        test_output = quad_cell_decoder_UUT.get_servo_controller().view_movement_queue()
+        golden_output = [STEPPER_DIRECTION.PAN_LEFT, STEPPER_DIRECTION.TILT_DOWN]
+        test_output = quad_cell_decoder_UUT.get_stepper_controller().view_movement_queue()
         assert len(test_output) == len(golden_output)
         for i in range(0, len(test_output)):
             assert test_output[i] == golden_output[i]
@@ -400,8 +400,8 @@ class TestQuadCellDecoder:
         quad_cell_decoder_UUT.decode_brightness_into_direction()
 
         # verify output
-        golden_output = [SERVO_DIRECTION.PAN_RIGHT, SERVO_DIRECTION.TILT_UP]
-        test_output = quad_cell_decoder_UUT.get_servo_controller().view_movement_queue()
+        golden_output = [STEPPER_DIRECTION.PAN_RIGHT, STEPPER_DIRECTION.TILT_UP]
+        test_output = quad_cell_decoder_UUT.get_stepper_controller().view_movement_queue()
         assert len(test_output) == len(golden_output)
         for i in range(0, len(test_output)):
             assert test_output[i] == golden_output[i]
@@ -426,8 +426,8 @@ class TestQuadCellDecoder:
         quad_cell_decoder_UUT.decode_brightness_into_direction()
 
         # verify output
-        golden_output = [SERVO_DIRECTION.PAN_RIGHT]
-        test_output = quad_cell_decoder_UUT.get_servo_controller().view_movement_queue()
+        golden_output = [STEPPER_DIRECTION.PAN_RIGHT]
+        test_output = quad_cell_decoder_UUT.get_stepper_controller().view_movement_queue()
         assert len(test_output) == len(golden_output)
         for i in range(0, len(test_output)):
             assert test_output[i] == golden_output[i]
@@ -453,7 +453,7 @@ class TestQuadCellDecoder:
 
         # verify output
         golden_output = []
-        test_output = quad_cell_decoder_UUT.get_servo_controller().view_movement_queue()
+        test_output = quad_cell_decoder_UUT.get_stepper_controller().view_movement_queue()
         assert len(test_output) == len(golden_output)
         for i in range(0, len(test_output)):
             assert test_output[i] == golden_output[i]
@@ -478,8 +478,8 @@ class TestQuadCellDecoder:
         quad_cell_decoder_UUT.decode_brightness_into_direction()
 
         # verify output
-        golden_output = [SERVO_DIRECTION.PAN_RIGHT, SERVO_DIRECTION.TILT_DOWN]
-        test_output = quad_cell_decoder_UUT.get_servo_controller().view_movement_queue()
+        golden_output = [STEPPER_DIRECTION.PAN_RIGHT, STEPPER_DIRECTION.TILT_DOWN]
+        test_output = quad_cell_decoder_UUT.get_stepper_controller().view_movement_queue()
         assert len(test_output) == len(golden_output)
         for i in range(0, len(test_output)):
             assert test_output[i] == golden_output[i]
@@ -504,8 +504,8 @@ class TestQuadCellDecoder:
         quad_cell_decoder_UUT.decode_brightness_into_direction()
 
         # verify output
-        golden_output = [SERVO_DIRECTION.TILT_UP]
-        test_output = quad_cell_decoder_UUT.get_servo_controller().view_movement_queue()
+        golden_output = [STEPPER_DIRECTION.TILT_UP]
+        test_output = quad_cell_decoder_UUT.get_stepper_controller().view_movement_queue()
         assert len(test_output) == len(golden_output)
         for i in range(0, len(test_output)):
             assert test_output[i] == golden_output[i]
@@ -530,8 +530,8 @@ class TestQuadCellDecoder:
         quad_cell_decoder_UUT.decode_brightness_into_direction()
 
         # verify output
-        golden_output = [SERVO_DIRECTION.PAN_RIGHT, SERVO_DIRECTION.TILT_UP]
-        test_output = quad_cell_decoder_UUT.get_servo_controller().view_movement_queue()
+        golden_output = [STEPPER_DIRECTION.PAN_RIGHT, STEPPER_DIRECTION.TILT_UP]
+        test_output = quad_cell_decoder_UUT.get_stepper_controller().view_movement_queue()
         assert len(test_output) == len(golden_output)
         for i in range(0, len(test_output)):
             assert test_output[i] == golden_output[i]
@@ -557,7 +557,7 @@ class TestQuadCellDecoder:
 
         # verify output
         golden_output = []
-        test_output = quad_cell_decoder_UUT.get_servo_controller().view_movement_queue()
+        test_output = quad_cell_decoder_UUT.get_stepper_controller().view_movement_queue()
         assert len(test_output) == len(golden_output)
         for i in range(0, len(test_output)):
             assert test_output[i] == golden_output[i]
