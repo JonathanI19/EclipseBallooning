@@ -10,6 +10,7 @@ from enum import Enum
 
 class STEPPER_DIRECTION(Enum):
     """The STEPPER_DIRECTION enumeration."""
+    STOP = 0
     PAN_LEFT = 1
     PAN_RIGHT = 2
     TILT_UP = 3
@@ -33,12 +34,12 @@ class StepperController:
 
         # initialize GPIO pins
         if (is_rpi):
-            from RPi import GPIO
+            import RPi.GPIO as GPIO
             self.__PC0 = 25
             self.__PC1 = 8
             self.__TC0 = 7
             self.__TC1 = 1
-            GPIO.setmode(GPIO.BOARD)
+            GPIO.setmode(GPIO.BCM)
             GPIO.setup(self.__PC0, GPIO.OUT)
             GPIO.setup(self.__PC1, GPIO.OUT)
             GPIO.setup(self.__TC0, GPIO.OUT)
@@ -58,25 +59,18 @@ class StepperController:
             cmd = self.__movement_queue.pop(0)
 
             if (self.__is_rpi):
+                import RPi.GPIO as GPIO
                 # send the appropriate byte code to the Arduinos
                 if cmd == STEPPER_DIRECTION.PAN_LEFT:
                     GPIO.output(self.__PC0, GPIO.HIGH)
                     GPIO.output(self.__PC1, GPIO.LOW)
-                    GPIO.output(self.__TC0, GPIO.LOW)
-                    GPIO.output(self.__TC1, GPIO.LOW)
                 elif cmd == STEPPER_DIRECTION.PAN_RIGHT:
                     GPIO.output(self.__PC0, GPIO.LOW)
                     GPIO.output(self.__PC1, GPIO.HIGH)
-                    GPIO.output(self.__TC0, GPIO.LOW)
-                    GPIO.output(self.__TC1, GPIO.LOW)
                 elif cmd == STEPPER_DIRECTION.TILT_UP:
-                    GPIO.output(self.__PC0, GPIO.LOW)
-                    GPIO.output(self.__PC1, GPIO.LOW)
                     GPIO.output(self.__TC0, GPIO.HIGH)
                     GPIO.output(self.__TC1, GPIO.LOW)
                 elif cmd == STEPPER_DIRECTION.TILT_DOWN:
-                    GPIO.output(self.__PC0, GPIO.LOW)
-                    GPIO.output(self.__PC1, GPIO.LOW)
                     GPIO.output(self.__TC0, GPIO.LOW)
                     GPIO.output(self.__TC1, GPIO.HIGH)
                 else:
@@ -102,4 +96,13 @@ class StepperController:
         @return    list(STEPPER_DIRECTION)
         """
         return self.__movement_queue
+        
+    def cleanup(self):
+        """ Cleanup GPIO pins.
+
+        @return    None
+        """
+        if (self.__is_rpi):
+            import RPi.GPIO as GPIO
+            GPIO.cleanup()
     
