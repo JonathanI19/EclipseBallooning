@@ -7,8 +7,8 @@
 # imports
 from math import sqrt
 from statistics import variance
-from stepper_controller import STEPPER_DIRECTION
-from stepper_controller import StepperController
+from .stepper_controller import STEPPER_DIRECTION
+from .stepper_controller import StepperController
 
 class QuadCellDecoder:
     """ The QuadCellDecoder class.
