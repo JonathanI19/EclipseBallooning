@@ -52,7 +52,6 @@ class StepperController:
         """
 
         # process all commands in the queue
-        print("Executing movement commands for input frame ...")
         while len(self.__movement_queue):
 
             # pop the next command
@@ -78,8 +77,7 @@ class StepperController:
                     GPIO.output(self.__PC1, GPIO.LOW)
                     GPIO.output(self.__TC0, GPIO.LOW)
                     GPIO.output(self.__TC1, GPIO.LOW)
-            else:
-                print(cmd)
+            print(cmd)
 
     def push_movement_command(self, new_cmd):
 
@@ -104,5 +102,9 @@ class StepperController:
         """
         if (self.__is_rpi):
             import RPi.GPIO as GPIO
+            GPIO.output(self.__PC0, GPIO.LOW)
+            GPIO.output(self.__PC1, GPIO.LOW)
+            GPIO.output(self.__TC0, GPIO.LOW)
+            GPIO.output(self.__TC1, GPIO.LOW)
             GPIO.cleanup()
     

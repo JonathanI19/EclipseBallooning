@@ -28,7 +28,7 @@ class QuadCellDecoder:
         self.__quadrant_intensities = ()
         self.__quadrant_variance = 0
         self.__brightest_quadrants = []
-        self.__stepper_controller = StepperController()
+        self.__stepper_controller = StepperController(is_rpi = True)
 
         # Coefficient for sensitivity modification
         self.std_dev_coefficient = std_dev_coefficient
@@ -162,7 +162,7 @@ class QuadCellDecoder:
             self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
             self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.TILT_UP)
         elif stepper_code == 0b1111:
-            pass
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.STOP)
 
     def get_quadrant_intensities(self):
         """ Gets __quadrant_intensities member variable.

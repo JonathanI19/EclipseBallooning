@@ -4,7 +4,7 @@ from util.camera_processor import CameraProcessor
 from util.quad_cell_decoder import QuadCellDecoder
 from picamera2 import Picamera2
 
-DEMO = True
+DEMO = False
 
 def process_current_frame(qcDec, brightness_vals):
 
@@ -110,6 +110,7 @@ def main():
     
         # Wait for 'a' key to stop the program 
         if cv2.waitKey(1) & 0xFF == ord('a'):
+            qcDec.get_stepper_controller().cleanup()
             break
     
     # After we release our webcam, we also release the out
