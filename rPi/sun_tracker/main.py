@@ -2,9 +2,9 @@ import cv2
 import numpy as np
 from util.camera_processor import CameraProcessor
 from util.quad_cell_decoder import QuadCellDecoder
+from util.streaming import StreamingOutput, StreamingHandler, StreamingServer
 from picamera2 import Picamera2
 import argparse
-global DEMO, SSH, QUAD
 
 
 def process_current_frame(qcDec, brightness_vals):
@@ -16,13 +16,12 @@ def process_current_frame(qcDec, brightness_vals):
     qcDec.get_stepper_controller().move_steppers()
 
 def main(args):
-    DEMO = bool(args.demo)
-    SSH = args.ssh
+    
+    DISPLAY = bool(args.display)
+    STREAM = bool(args.stream)
     QUAD = bool(args.quad)
     
-    print("Demo is ", DEMO)
-    
-    if DEMO is True:
+    if DISPLAY is True:
         print("In thread")
         # Start window thread
         cv2. startWindowThread()
@@ -42,6 +41,16 @@ def main(args):
     # Set fps value and create videoWriter object "out"
     fps = 24
     out = cv2.VideoWriter('output.mp4', cv2.VideoWriter_fourcc(*'mp4v'), fps, size)
+
+    if STREAM is True:
+        output = StreamingOutput()
+        stream = cv2.VideoWriter(output, cv2.VideoWriter_fourcc(*'mp4v'), fps, size)
+        try:
+            address = ('', 8000)
+            server = StreamingServer(address, StreamingHandler)
+            server.serve_forever()
+        finally:
+            stream.release()
 
     # Variables for sampling
     frame_count = 0
@@ -66,7 +75,7 @@ def main(args):
         # output the frame
         out.write(frame) 
         
-        if DEMO is True:
+        if DISPLAY is True:
             # The original input frame is shown in the window 
             cv2.imshow('Original', frame)
         
@@ -78,7 +87,7 @@ def main(args):
             cProc.split_frame()
             (q0,q1,q2,q3) = cProc.get_quadrants()
 
-            # Display Quadrant HSV if DEMO is True
+            # Display Quadrant HSV if QUAD is True
             if QUAD is True:
                 cv2.imshow('q0', q0)
                 cv2.imshow('q1', q1)
@@ -91,10 +100,7 @@ def main(args):
             # Process current frame
             process_current_frame(qcDec, (v0, v1, v2, v3))
 
-            # Print out avg brightness values of quadrants if DEMO is True
-            # print(v0, v1, v2, v3)
-
-            # Showcases brightest quadrant(s) if DEMO is True
+            # Showcases brightest quadrant(s) if QUAD is True
             if QUAD is True:
 
                 # Getting results of brightness computation
@@ -133,8 +139,8 @@ def parse_args():
     
     # Add arguments
     parser.add_argument('-q', '--quad', default=False, help="(Boolean) Toggles Quadrant Demo Functionality")
-    parser.add_argument('-s', '--ssh', default=0, help="(String) if IP is input, create web server to stream to")
-    parser.add_argument('-d', '--demo', default=False, help="(Boolean) Toggles local input frame display")
+    parser.add_argument('-s', '--stream', default=False, help="(Boolean) Toggles web streaming")
+    parser.add_argument('-d', '--display', default=False, help="(Boolean) Toggles local input frame display")
     args = parser.parse_args()
     
     return args
