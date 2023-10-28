@@ -3,8 +3,7 @@ import numpy as np
 from util.camera_processor import CameraProcessor
 from util.quad_cell_decoder import QuadCellDecoder
 from picamera2 import Picamera2
-
-DEMO = False
+import argparse
 
 def process_current_frame(qcDec, brightness_vals):
 
@@ -14,7 +13,8 @@ def process_current_frame(qcDec, brightness_vals):
     qcDec.decode_brightness_into_direction()
     qcDec.get_stepper_controller().move_steppers()
 
-def main():
+def main(args):
+
 
     if DEMO is True:
         # Start window thread
@@ -59,8 +59,9 @@ def main():
         # output the frame
         out.write(frame) 
         
-        # The original input frame is shown in the window 
-        cv2.imshow('Original', frame)
+        if DEMO is True:
+            # The original input frame is shown in the window 
+            cv2.imshow('Original', frame)
         
         # Executes brightness evaluation at specified sampling rate
         if(frame_count == (fps//samples_per_second)):
@@ -71,7 +72,7 @@ def main():
             (q0,q1,q2,q3) = cProc.get_quadrants()
 
             # Display Quadrant HSV if DEMO is True
-            if DEMO is True:
+            if QUAD is True:
                 cv2.imshow('q0', q0)
                 cv2.imshow('q1', q1)
                 cv2.imshow('q2', q2)
@@ -87,7 +88,7 @@ def main():
             # print(v0, v1, v2, v3)
 
             # Showcases brightest quadrant(s) if DEMO is True
-            if DEMO is True:
+            if QUAD is True:
 
                 # Getting results of brightness computation
                 q0_is_bright, q1_is_bright, q2_is_bright, q3_is_bright = qcDec.get_brightest_quadrants()
@@ -119,5 +120,20 @@ def main():
     # De-allocate any associated memory usage 
     cv2.destroyAllWindows()
     
+    
+def parse_args:
+    parser = argparse.ArgumentParser(description = "Image processing and streaming")
+    
+    # Add arguments
+    parser.add_argument('-q', '--quad', default=False, help="(Boolean) Toggles Quadrant Demo Functionality")
+    parser.add_argument('-s', '--ssh', default=0, help="(String) if IP is input, create web server to stream to")
+    parser.add_argument('-d', '--demo', default=False, help="(Boolean) Toggles local input frame display")
+    args = parser.parse_args()
+    
+    global DEMO = args.demo
+    global QUAD = args.quad
+    global SSH = args.ssh
+     
 if __name__ == "__main__":
+    parse_args()
     main()
