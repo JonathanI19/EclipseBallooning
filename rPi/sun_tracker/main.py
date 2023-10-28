@@ -4,6 +4,8 @@ from util.camera_processor import CameraProcessor
 from util.quad_cell_decoder import QuadCellDecoder
 from picamera2 import Picamera2
 import argparse
+global DEMO, SSH, QUAD
+
 
 def process_current_frame(qcDec, brightness_vals):
 
@@ -14,9 +16,14 @@ def process_current_frame(qcDec, brightness_vals):
     qcDec.get_stepper_controller().move_steppers()
 
 def main(args):
-
-
+    DEMO = bool(args.demo)
+    SSH = args.ssh
+    QUAD = bool(args.quad)
+    
+    print("Demo is ", DEMO)
+    
     if DEMO is True:
+        print("In thread")
         # Start window thread
         cv2. startWindowThread()
     
@@ -111,7 +118,7 @@ def main(args):
     
         # Wait for 'a' key to stop the program 
         if cv2.waitKey(1) & 0xFF == ord('a'):
-            qcDec.get_stepper_controller().cleanup()
+            #qcDec.get_stepper_controller().cleanup()
             break
     
     # After we release our webcam, we also release the out
@@ -121,7 +128,7 @@ def main(args):
     cv2.destroyAllWindows()
     
     
-def parse_args:
+def parse_args():
     parser = argparse.ArgumentParser(description = "Image processing and streaming")
     
     # Add arguments
@@ -130,10 +137,9 @@ def parse_args:
     parser.add_argument('-d', '--demo', default=False, help="(Boolean) Toggles local input frame display")
     args = parser.parse_args()
     
-    global DEMO = args.demo
-    global QUAD = args.quad
-    global SSH = args.ssh
+    return args
+
      
 if __name__ == "__main__":
-    parse_args()
-    main()
+    args = parse_args()
+    main(args)
