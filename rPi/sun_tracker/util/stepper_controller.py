@@ -37,8 +37,8 @@ class StepperController:
             import RPi.GPIO as GPIO
             self.__PC0 = 25
             self.__PC1 = 8
-            self.__TC0 = 7
-            self.__TC1 = 1
+            self.__TC0 = 23
+            self.__TC1 = 24
             GPIO.setmode(GPIO.BCM)
             GPIO.setup(self.__PC0, GPIO.OUT)
             GPIO.setup(self.__PC1, GPIO.OUT)
@@ -106,5 +106,5 @@ class StepperController:
             GPIO.output(self.__PC1, GPIO.LOW)
             GPIO.output(self.__TC0, GPIO.LOW)
             GPIO.output(self.__TC1, GPIO.LOW)
-            GPIO.cleanup()
+            #GPIO.cleanup()
     

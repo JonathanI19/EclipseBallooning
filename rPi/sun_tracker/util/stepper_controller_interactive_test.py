@@ -9,11 +9,27 @@ def main():
     # get user input
     try:
         while(True):
-            val = input('Enter movement command (STOP, CCW, CW) : ')
-            if (val == 'ccw'):
+            val = input('Enter movement command code: ')
+            if (val == '0'):
                 my_stepper.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
-            elif (val == 'cw'):
+            elif (val == '1'):
                 my_stepper.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
+            elif (val == '2'):
+                my_stepper.push_movement_command(STEPPER_DIRECTION.TILT_UP)
+            elif (val == '3'):
+                my_stepper.push_movement_command(STEPPER_DIRECTION.TILT_DOWN)
+            elif (val == '4'):
+                my_stepper.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
+                my_stepper.push_movement_command(STEPPER_DIRECTION.TILT_UP)
+            elif (val == '5'):
+                my_stepper.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
+                my_stepper.push_movement_command(STEPPER_DIRECTION.TILT_DOWN)
+            elif (val == '6'):
+                my_stepper.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
+                my_stepper.push_movement_command(STEPPER_DIRECTION.TILT_UP)
+            elif (val == '7'):
+                my_stepper.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
+                my_stepper.push_movement_command(STEPPER_DIRECTION.TILT_DOWN)
             else:
                 my_stepper.push_movement_command(STEPPER_DIRECTION.STOP)
             my_stepper.move_steppers()
