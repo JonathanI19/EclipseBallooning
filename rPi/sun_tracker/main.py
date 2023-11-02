@@ -1,10 +1,13 @@
 import cv2
 import numpy as np
+import socket
+import pickle
 from util.camera_processor import CameraProcessor
 from util.quad_cell_decoder import QuadCellDecoder
 from util.streaming import StreamingOutput, StreamingHandler, StreamingServer
 from picamera2 import Picamera2
 import argparse
+import sys
 
 
 def process_current_frame(qcDec, brightness_vals):
@@ -15,16 +18,27 @@ def process_current_frame(qcDec, brightness_vals):
     qcDec.decode_brightness_into_direction()
     qcDec.get_stepper_controller().move_steppers()
 
+def socket_init(ip):
+
+    # Set socket data as ipv4 and udp
+    s=socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.setsockopt(socket.SOL_SOCKET,socket.SO_SNDBUF,1000000)
+
+    # Specify ip and port
+    server_ip = ip
+    server_port = 6666
+    return s, server_ip, server_port
+
 def main(args):
     
     DISPLAY = bool(args.display)
     STREAM = bool(args.stream)
     QUAD = bool(args.quad)
+    GS_IP = args.ip
     
     if DISPLAY is True:
-        print("In thread")
         # Start window thread
-        cv2. startWindowThread()
+        cv2.startWindowThread()
     
     # Create picam2 object and start collecting data
     picam2 = Picamera2()
@@ -43,14 +57,10 @@ def main(args):
     out = cv2.VideoWriter('output.mp4', cv2.VideoWriter_fourcc(*'mp4v'), fps, size)
 
     if STREAM is True:
-        output = StreamingOutput()
-        stream = cv2.VideoWriter(output, cv2.VideoWriter_fourcc(*'mp4v'), fps, size)
-        try:
-            address = ('', 8000)
-            server = StreamingServer(address, StreamingHandler)
-            server.serve_forever()
-        finally:
-            stream.release()
+        if (GS_IP == 0):
+            print("No IP Set")
+            sys.exit()
+        s, server_ip, server_port = socket_init(ip = GS_IP)
 
     # Variables for sampling
     frame_count = 0
@@ -78,6 +88,12 @@ def main(args):
         if DISPLAY is True:
             # The original input frame is shown in the window 
             cv2.imshow('Original', frame)
+
+        # Execute if streaming flag set
+        if STREAM is True:
+            ret,buffer = cv2.imencode(".jpg",frame,[int(cv2.IMWRITE_JPEG_QUALITY),30])
+            x_as_bytes = pickle.dumps(buffer)
+            s.sendto((x_as_bytes),(server_ip,server_port))
         
         # Executes brightness evaluation at specified sampling rate
         if(frame_count == (fps//samples_per_second)):
@@ -141,6 +157,7 @@ def parse_args():
     parser.add_argument('-q', '--quad', default=False, help="(Boolean) Toggles Quadrant Demo Functionality")
     parser.add_argument('-s', '--stream', default=False, help="(Boolean) Toggles web streaming")
     parser.add_argument('-d', '--display', default=False, help="(Boolean) Toggles local input frame display")
+    parser.add_argument('-i', '--ip', default=0, help="(String) Set ip of ground station")
     args = parser.parse_args()
     
     return args
