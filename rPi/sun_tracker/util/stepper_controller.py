@@ -39,10 +39,10 @@ class StepperController:
         # initialize GPIO pins
         if (is_rpi):
             import RPi.GPIO as GPIO
-            self.__PC0 = 25
-            self.__PC1 = 8
-            self.__TC0 = 23
-            self.__TC1 = 24
+            self.__PC0 = 19
+            self.__PC1 = 26
+            self.__TC0 = 20
+            self.__TC1 = 21
             GPIO.setmode(GPIO.BCM)
             GPIO.setup(self.__PC0, GPIO.OUT)
             GPIO.setup(self.__PC1, GPIO.OUT)
