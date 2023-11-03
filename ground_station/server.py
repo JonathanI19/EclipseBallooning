@@ -14,9 +14,19 @@ from datetime import datetime
 def main(args):
 
     # Getting args
-    PI_IP = args.ip
     OUTPUT = args.filename
 
+
+    ## getting the hostname by socket.gethostname() method
+    hostname = socket.gethostname()
+
+    ## getting the IP address using socket.gethostbyname() method
+    GS_IP = socket.gethostbyname(hostname)
+
+    ## printing the hostname and ip_address
+    print(f"Hostname: {hostname}")
+    print(f"IP Address: {GS_IP}")
+    
     # Non-repeating output if filename not specified
     if (OUTPUT is False):
         # Getting date and time
@@ -26,9 +36,6 @@ def main(args):
     # Append file type
     OUTPUT = OUTPUT + ".mp4"
 
-    if(PI_IP is False):
-        print("Must pass r_pi IP in as arg. See <server.py --help>")
-        sys.exit()
     # Stores address of socket and AF_INET specifies ipv4
     # SOCK_DGRAM for UDP
     # Risk of data loss if packet dropped
@@ -39,11 +46,11 @@ def main(args):
     port=6666
 
     # Binds ip and port into socket
-    s.bind((PI_IP,port))
+    s.bind((GS_IP,port))
 
-
+    # Setting vals
     fps = 24
-    size = (1920,1080)
+    size = (640,480)
     out = cv2.VideoWriter(OUTPUT, cv2.VideoWriter_fourcc(*'mp4v'), fps, size)
 
 
@@ -71,7 +78,6 @@ def main(args):
 
 def parse_args():
     parser = argparse.ArgumentParser(description = "Image processing and streaming")
-    parser.add_argument('-i', '--ip', default=False, help="(String) Set ip of pi")
     parser.add_argument('-f', '--filename', default=False, help="(String) Desired name of output file. Do not append file type")
     args = parser.parse_args()
     
