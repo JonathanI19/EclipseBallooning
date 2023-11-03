@@ -19,17 +19,13 @@ def main():
             elif (val == '3'):
                 my_stepper.push_movement_command(STEPPER_DIRECTION.TILT_DOWN)
             elif (val == '4'):
-                my_stepper.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
-                my_stepper.push_movement_command(STEPPER_DIRECTION.TILT_UP)
+                my_stepper.push_movement_command(STEPPER_DIRECTION.PAN_LEFT_TILT_UP)
             elif (val == '5'):
-                my_stepper.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
-                my_stepper.push_movement_command(STEPPER_DIRECTION.TILT_DOWN)
+                my_stepper.push_movement_command(STEPPER_DIRECTION.PAN_LEFT_TILT_DOWN)
             elif (val == '6'):
-                my_stepper.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
-                my_stepper.push_movement_command(STEPPER_DIRECTION.TILT_UP)
+                my_stepper.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT_TILT_UP)
             elif (val == '7'):
-                my_stepper.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
-                my_stepper.push_movement_command(STEPPER_DIRECTION.TILT_DOWN)
+                my_stepper.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT_TILT_DOWN)
             else:
                 my_stepper.push_movement_command(STEPPER_DIRECTION.STOP)
             my_stepper.move_steppers()
