@@ -65,8 +65,8 @@ class StepperController:
                 import RPi.GPIO as GPIO
                 # send the appropriate byte code to the Arduinos
                 if cmd == STEPPER_DIRECTION.PAN_LEFT:
-                    GPIO.output(self.__TC0, GPIO.HIGH)
-                    GPIO.output(self.__TC1, GPIO.LOW)
+                    GPIO.output(self.__PC0, GPIO.HIGH)
+                    GPIO.output(self.__PC1, GPIO.LOW)
                     GPIO.output(self.__TC0, GPIO.LOW)
                     GPIO.output(self.__TC1, GPIO.LOW)
                 elif cmd == STEPPER_DIRECTION.PAN_RIGHT:
