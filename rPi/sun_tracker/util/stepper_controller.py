@@ -15,6 +15,10 @@ class STEPPER_DIRECTION(Enum):
     PAN_RIGHT = 2
     TILT_UP = 3
     TILT_DOWN = 4
+    PAN_LEFT_TILT_UP = 5
+    PAN_LEFT_TILT_DOWN = 6
+    PAN_RIGHT_TILT_UP = 7
+    PAN_RIGHT_TILT_DOWN = 8
 
 class StepperController:
     """ The StepperController class.
@@ -61,15 +65,43 @@ class StepperController:
                 import RPi.GPIO as GPIO
                 # send the appropriate byte code to the Arduinos
                 if cmd == STEPPER_DIRECTION.PAN_LEFT:
-                    GPIO.output(self.__PC0, GPIO.HIGH)
-                    GPIO.output(self.__PC1, GPIO.LOW)
+                    GPIO.output(self.__TC0, GPIO.HIGH)
+                    GPIO.output(self.__TC1, GPIO.LOW)
+                    GPIO.output(self.__TC0, GPIO.LOW)
+                    GPIO.output(self.__TC1, GPIO.LOW)
                 elif cmd == STEPPER_DIRECTION.PAN_RIGHT:
                     GPIO.output(self.__PC0, GPIO.LOW)
                     GPIO.output(self.__PC1, GPIO.HIGH)
+                    GPIO.output(self.__TC0, GPIO.LOW)
+                    GPIO.output(self.__TC1, GPIO.LOW)
                 elif cmd == STEPPER_DIRECTION.TILT_UP:
+                    GPIO.output(self.__PC0, GPIO.LOW)
+                    GPIO.output(self.__PC1, GPIO.LOW)
                     GPIO.output(self.__TC0, GPIO.HIGH)
                     GPIO.output(self.__TC1, GPIO.LOW)
                 elif cmd == STEPPER_DIRECTION.TILT_DOWN:
+                    GPIO.output(self.__PC0, GPIO.LOW)
+                    GPIO.output(self.__PC1, GPIO.LOW)
+                    GPIO.output(self.__TC0, GPIO.LOW)
+                    GPIO.output(self.__TC1, GPIO.HIGH)
+                elif cmd == STEPPER_DIRECTION.PAN_LEFT_TILT_UP:
+                    GPIO.output(self.__PC0, GPIO.HIGH)
+                    GPIO.output(self.__PC1, GPIO.LOW)
+                    GPIO.output(self.__TC0, GPIO.HIGH)
+                    GPIO.output(self.__TC1, GPIO.LOW)
+                elif cmd == STEPPER_DIRECTION.PAN_LEFT_TILT_DOWN:
+                    GPIO.output(self.__PC0, GPIO.HIGH)
+                    GPIO.output(self.__PC1, GPIO.LOW)
+                    GPIO.output(self.__TC0, GPIO.LOW)
+                    GPIO.output(self.__TC1, GPIO.HIGH)
+                elif cmd == STEPPER_DIRECTION.PAN_RIGHT_TILT_UP:
+                    GPIO.output(self.__PC0, GPIO.LOW)
+                    GPIO.output(self.__PC1, GPIO.HIGH)
+                    GPIO.output(self.__TC0, GPIO.HIGH)
+                    GPIO.output(self.__TC1, GPIO.LOW)
+                elif cmd == STEPPER_DIRECTION.PAN_RIGHT_TILT_DOWN:
+                    GPIO.output(self.__PC0, GPIO.LOW)
+                    GPIO.output(self.__PC1, GPIO.HIGH)
                     GPIO.output(self.__TC0, GPIO.LOW)
                     GPIO.output(self.__TC1, GPIO.HIGH)
                 else:

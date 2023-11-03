@@ -123,44 +123,35 @@ class QuadCellDecoder:
 
         # decode the binary string
         if stepper_code == 0b0000:
-            pass
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.STOP)
         elif stepper_code == 0b0001:
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.TILT_DOWN)
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT_TILT_DOWN)
         elif stepper_code == 0b0010:
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.TILT_DOWN)
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT_TILT_DOWN)
         elif stepper_code == 0b0011:
             self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.TILT_DOWN)
         elif stepper_code == 0b0100:
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.TILT_UP)
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT_TILT_UP)
         elif stepper_code == 0b0101:
-            pass
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.STOP)
         elif stepper_code == 0b0110:
             self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
-            pass
         elif stepper_code == 0b0111:
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.TILT_DOWN)
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT_TILT_DOWN)
         elif stepper_code == 0b1000:
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.TILT_UP)
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT_TILT_UP)
         elif stepper_code == 0b1001:
             self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
         elif stepper_code == 0b1010:
-            pass
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.STOP)
         elif stepper_code == 0b1011:
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.TILT_DOWN)
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT_TILT_DOWN)
         elif stepper_code == 0b1100:
             self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.TILT_UP)
         elif stepper_code == 0b1101:
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.TILT_UP)
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT_TILT_UP)
         elif stepper_code == 0b1110:
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.TILT_UP)
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT_TILT_UP)
         elif stepper_code == 0b1111:
             self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.STOP)
 

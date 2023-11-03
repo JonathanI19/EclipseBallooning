@@ -218,7 +218,7 @@ class TestQuadCellDecoder:
         quad_cell_decoder_UUT.decode_brightness_into_direction()
 
         # verify output
-        golden_output = [STEPPER_DIRECTION.PAN_RIGHT, STEPPER_DIRECTION.TILT_DOWN]
+        golden_output = [STEPPER_DIRECTION.PAN_RIGHT_TILT_DOWN]
         test_output = quad_cell_decoder_UUT.get_stepper_controller().view_movement_queue()
         assert len(test_output) == len(golden_output)
         for i in range(0, len(test_output)):
@@ -244,7 +244,7 @@ class TestQuadCellDecoder:
         quad_cell_decoder_UUT.decode_brightness_into_direction()
 
         # verify output
-        golden_output = [STEPPER_DIRECTION.PAN_LEFT, STEPPER_DIRECTION.TILT_DOWN]
+        golden_output = [STEPPER_DIRECTION.PAN_LEFT_TILT_DOWN]
         test_output = quad_cell_decoder_UUT.get_stepper_controller().view_movement_queue()
         assert len(test_output) == len(golden_output)
         for i in range(0, len(test_output)):
@@ -296,7 +296,7 @@ class TestQuadCellDecoder:
         quad_cell_decoder_UUT.decode_brightness_into_direction()
 
         # verify output
-        golden_output = [STEPPER_DIRECTION.PAN_LEFT, STEPPER_DIRECTION.TILT_UP]
+        golden_output = [STEPPER_DIRECTION.PAN_LEFT_TILT_UP]
         test_output = quad_cell_decoder_UUT.get_stepper_controller().view_movement_queue()
         assert len(test_output) == len(golden_output)
         for i in range(0, len(test_output)):
@@ -322,7 +322,7 @@ class TestQuadCellDecoder:
         quad_cell_decoder_UUT.decode_brightness_into_direction()
 
         # verify output
-        golden_output = []
+        golden_output = [STEPPER_DIRECTION.STOP]
         test_output = quad_cell_decoder_UUT.get_stepper_controller().view_movement_queue()
         assert len(test_output) == len(golden_output)
         for i in range(0, len(test_output)):
@@ -374,7 +374,7 @@ class TestQuadCellDecoder:
         quad_cell_decoder_UUT.decode_brightness_into_direction()
 
         # verify output
-        golden_output = [STEPPER_DIRECTION.PAN_LEFT, STEPPER_DIRECTION.TILT_DOWN]
+        golden_output = [STEPPER_DIRECTION.PAN_LEFT_TILT_DOWN]
         test_output = quad_cell_decoder_UUT.get_stepper_controller().view_movement_queue()
         assert len(test_output) == len(golden_output)
         for i in range(0, len(test_output)):
@@ -400,7 +400,7 @@ class TestQuadCellDecoder:
         quad_cell_decoder_UUT.decode_brightness_into_direction()
 
         # verify output
-        golden_output = [STEPPER_DIRECTION.PAN_RIGHT, STEPPER_DIRECTION.TILT_UP]
+        golden_output = [STEPPER_DIRECTION.PAN_RIGHT_TILT_UP]
         test_output = quad_cell_decoder_UUT.get_stepper_controller().view_movement_queue()
         assert len(test_output) == len(golden_output)
         for i in range(0, len(test_output)):
@@ -452,7 +452,7 @@ class TestQuadCellDecoder:
         quad_cell_decoder_UUT.decode_brightness_into_direction()
 
         # verify output
-        golden_output = []
+        golden_output = [STEPPER_DIRECTION.STOP]
         test_output = quad_cell_decoder_UUT.get_stepper_controller().view_movement_queue()
         assert len(test_output) == len(golden_output)
         for i in range(0, len(test_output)):
@@ -478,7 +478,7 @@ class TestQuadCellDecoder:
         quad_cell_decoder_UUT.decode_brightness_into_direction()
 
         # verify output
-        golden_output = [STEPPER_DIRECTION.PAN_RIGHT, STEPPER_DIRECTION.TILT_DOWN]
+        golden_output = [STEPPER_DIRECTION.PAN_RIGHT_TILT_DOWN]
         test_output = quad_cell_decoder_UUT.get_stepper_controller().view_movement_queue()
         assert len(test_output) == len(golden_output)
         for i in range(0, len(test_output)):
@@ -530,7 +530,7 @@ class TestQuadCellDecoder:
         quad_cell_decoder_UUT.decode_brightness_into_direction()
 
         # verify output
-        golden_output = [STEPPER_DIRECTION.PAN_RIGHT, STEPPER_DIRECTION.TILT_UP]
+        golden_output = [STEPPER_DIRECTION.PAN_RIGHT_TILT_UP]
         test_output = quad_cell_decoder_UUT.get_stepper_controller().view_movement_queue()
         assert len(test_output) == len(golden_output)
         for i in range(0, len(test_output)):
@@ -556,7 +556,7 @@ class TestQuadCellDecoder:
         quad_cell_decoder_UUT.decode_brightness_into_direction()
 
         # verify output
-        golden_output = []
+        golden_output = [STEPPER_DIRECTION.STOP]
         test_output = quad_cell_decoder_UUT.get_stepper_controller().view_movement_queue()
         assert len(test_output) == len(golden_output)
         for i in range(0, len(test_output)):
