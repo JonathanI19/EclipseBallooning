@@ -1,0 +1,235 @@
+   MainThread:19:08:07.719 util.py                                   210 DEBUG    | Send cmd --> netsh wlan show interfaces
+   MainThread:19:08:07.829 util.py                                   216 DEBUG    | Receive response --> 
+There is 1 interface on the system: 
+
+    Name                   : Wi-Fi
+    Description            : Intel(R) Wi-Fi 6 AX200 160MHz
+    GUID                   : bed5cd4f-cba6-4e4b-b5d5-6a1150a0660a
+    Physical address       : b4:0e:de:29:8f:4c
+    State                  : connected
+    SSID                   : Treehouse5G
+    BSSID                  : 10:78:5b:b9:dc:26
+    Network type           : Infrastructure
+    Radio type             : 802.11ac
+    Authentication         : WPA2-Personal
+    Cipher                 : CCMP
+    Connection mode        : Profile
+    Channel                : 44
+    Receive rate (Mbps)    : 866.7
+    Transmit rate (Mbps)   : 866.7
+    Signal                 : 99% 
+    Profile                : Treehouse5G 
+
+    Hosted network status  : Not available
+
+
+   MainThread:19:08:07.829 wireless.py                                97 DEBUG    | Wifi setup. Using [WifiCli] driver::[Wi-Fi] interface
+   MainThread:19:08:07.829 bleak_wrapper.py                          119 INFO     | Scanning for GoPro [A-Z0-9]{4} bluetooth devices...
+   MainThread:19:08:07.996 scanner.py                                104 DEBUG    | Received 4E:79:0E:ED:F7:65: .
+   MainThread:19:08:07.996 scanner.py                                104 DEBUG    | Received 4E:79:0E:ED:F7:65: .
+   MainThread:19:08:07.996 scanner.py                                104 DEBUG    | Received 78:6D:EB:D1:93:4A: .
+   MainThread:19:08:08.007 scanner.py                                104 DEBUG    | Received 24:FC:E5:B9:56:95: .
+   MainThread:19:08:08.116 scanner.py                                104 DEBUG    | Received 78:6D:EB:CF:74:5E: B32A5679A02C.
+   MainThread:19:08:08.126 scanner.py                                104 DEBUG    | Received 78:6D:EB:CF:74:5E: .
+   MainThread:19:08:08.277 scanner.py                                104 DEBUG    | Received 78:6D:EB:CF:74:5E: .
+   MainThread:19:08:08.589 scanner.py                                104 DEBUG    | Received 78:6D:EB:D1:93:4A: .
+   MainThread:19:08:08.709 scanner.py                                104 DEBUG    | Received E7:A7:D5:1E:C8:CB: .
+   MainThread:19:08:08.709 scanner.py                                104 DEBUG    | Received 78:6D:EB:D4:09:A9: B32A5679A02C.
+   MainThread:19:08:08.819 scanner.py                                104 DEBUG    | Received 78:6D:EB:D1:93:4A: B32A5679A02C.
+   MainThread:19:08:08.961 scanner.py                                104 DEBUG    | Received 4E:4E:4E:3E:9A:D5: .
+   MainThread:19:08:08.961 scanner.py                                104 DEBUG    | Received 4E:4E:4E:3E:9A:D5: .
+   MainThread:19:08:09.212 scanner.py                                104 DEBUG    | Received 4E:4E:4E:3E:9A:D5: .
+   MainThread:19:08:09.302 scanner.py                                104 DEBUG    | Received 78:6D:EB:D1:93:4A: B32A5679A02C.
+   MainThread:19:08:09.312 scanner.py                                104 DEBUG    | Received E7:A7:D5:1E:C8:CB: .
+   MainThread:19:08:09.312 scanner.py                                104 DEBUG    | Received E7:A7:D5:1E:C8:CB: 9067640D9C7833ADE9.
+   MainThread:19:08:09.424 scanner.py                                104 DEBUG    | Received 5C:F9:38:B1:76:A4: .
+   MainThread:19:08:09.424 scanner.py                                104 DEBUG    | Received 5C:F9:38:B1:76:A4: .
+   MainThread:19:08:09.526 scanner.py                                104 DEBUG    | Received 7D:CC:6F:F3:8D:F6: .
+   MainThread:19:08:09.526 scanner.py                                104 DEBUG    | Received 24:FC:E5:B9:56:95: .
+   MainThread:19:08:09.546 scanner.py                                104 DEBUG    | Received 78:6D:EB:D1:93:4A: .
+   MainThread:19:08:09.786 scanner.py                                104 DEBUG    | Received 84:71:27:35:F2:D5: .
+   MainThread:19:08:09.886 scanner.py                                104 DEBUG    | Received 84:71:27:35:F2:D5: .
+   MainThread:19:08:09.896 scanner.py                                104 DEBUG    | Received 7D:CC:6F:F3:8D:F6: .
+   MainThread:19:08:09.896 scanner.py                                104 DEBUG    | Received 4E:79:0E:ED:F7:65: .
+   MainThread:19:08:09.896 scanner.py                                104 DEBUG    | Received 4E:79:0E:ED:F7:65: .
+   MainThread:19:08:10.009 scanner.py                                104 DEBUG    | Received E7:A7:D5:1E:C8:CB: .
+   MainThread:19:08:10.009 scanner.py                                104 DEBUG    | Received E7:A7:D5:1E:C8:CB: 9067640D9C7833ADE9.
+   MainThread:19:08:10.119 scanner.py                                104 DEBUG    | Received 75:3A:93:4F:CF:F8: .
+   MainThread:19:08:10.119 scanner.py                                104 DEBUG    | Received 78:6D:EB:D4:09:A9: .
+   MainThread:19:08:10.239 scanner.py                                104 DEBUG    | Received 4E:4E:4E:3E:9A:D5: .
+   MainThread:19:08:10.239 scanner.py                                104 DEBUG    | Received 4E:4E:4E:3E:9A:D5: .
+   MainThread:19:08:10.499 scanner.py                                104 DEBUG    | Received E6:B1:9A:92:73:BD: .
+   MainThread:19:08:10.509 scanner.py                                104 DEBUG    | Received E6:B1:9A:92:73:BD: GoPro 1667.
+   MainThread:19:08:10.509 bleak_wrapper.py                          132 INFO     | 	Discovered: E6:B1:9A:92:73:BD: GoPro 1667
+   MainThread:19:08:10.509 scanner.py                                211 DEBUG    | 12 devices found. Watcher status: 3.
+   MainThread:19:08:10.509 bleak_wrapper.py                          145 INFO     | Found 1 matching devices.
+   MainThread:19:08:10.521 client.py                                 106 INFO     | Establishing the BLE connection
+   MainThread:19:08:10.521 bleak_wrapper.py                          212 INFO     | Establishing BLE connection to E6:B1:9A:92:73:BD: GoPro 1667...
+   MainThread:19:08:10.531 client.py                                 253 DEBUG    | Connecting to BLE device @ E6:B1:9A:92:73:BD
+   MainThread:19:08:10.709 client.py                                 632 DEBUG    | getting services (service_cache_mode=None, cache_mode=None)...
+   MainThread:19:08:10.709 client.py                                 656 DEBUG    | calling get_gatt_services_async
+   MainThread:19:08:11.019 client.py                                 692 DEBUG    | returned from get_gatt_services_async
+   MainThread:19:08:11.029 client.py                                 704 DEBUG    | calling get_characteristics_async
+   MainThread:19:08:11.039 client.py                                 712 DEBUG    | returned from get_characteristics_async
+   MainThread:19:08:11.049 client.py                                 704 DEBUG    | calling get_characteristics_async
+   MainThread:19:08:11.070 client.py                                 712 DEBUG    | returned from get_characteristics_async
+   MainThread:19:08:11.070 client.py                                 721 DEBUG    | calling get_descriptors_async
+   MainThread:19:08:11.080 client.py                                 729 DEBUG    | returned from get_descriptors_async
+   MainThread:19:08:11.080 client.py                                 721 DEBUG    | calling get_descriptors_async
+   MainThread:19:08:11.082 client.py                                 729 DEBUG    | returned from get_descriptors_async
+   MainThread:19:08:11.082 client.py                                 721 DEBUG    | calling get_descriptors_async
+   MainThread:19:08:11.082 client.py                                 729 DEBUG    | returned from get_descriptors_async
+   MainThread:19:08:11.082 client.py                                 704 DEBUG    | calling get_characteristics_async
+   MainThread:19:08:11.109 client.py                                 712 DEBUG    | returned from get_characteristics_async
+   MainThread:19:08:11.109 client.py                                 721 DEBUG    | calling get_descriptors_async
+   MainThread:19:08:11.109 client.py                                 729 DEBUG    | returned from get_descriptors_async
+   MainThread:19:08:11.109 client.py                                 704 DEBUG    | calling get_characteristics_async
+   MainThread:19:08:11.169 client.py                                 712 DEBUG    | returned from get_characteristics_async
+   MainThread:19:08:11.169 client.py                                 721 DEBUG    | calling get_descriptors_async
+   MainThread:19:08:11.169 client.py                                 729 DEBUG    | returned from get_descriptors_async
+   MainThread:19:08:11.169 client.py                                 721 DEBUG    | calling get_descriptors_async
+   MainThread:19:08:11.169 client.py                                 729 DEBUG    | returned from get_descriptors_async
+   MainThread:19:08:11.179 client.py                                 721 DEBUG    | calling get_descriptors_async
+   MainThread:19:08:11.179 client.py                                 729 DEBUG    | returned from get_descriptors_async
+   MainThread:19:08:11.179 client.py                                 721 DEBUG    | calling get_descriptors_async
+   MainThread:19:08:11.189 client.py                                 729 DEBUG    | returned from get_descriptors_async
+   MainThread:19:08:11.189 client.py                                 721 DEBUG    | calling get_descriptors_async
+   MainThread:19:08:11.189 client.py                                 729 DEBUG    | returned from get_descriptors_async
+   MainThread:19:08:11.189 client.py                                 721 DEBUG    | calling get_descriptors_async
+   MainThread:19:08:11.199 client.py                                 729 DEBUG    | returned from get_descriptors_async
+   MainThread:19:08:11.199 client.py                                 721 DEBUG    | calling get_descriptors_async
+      Dummy-1:19:08:11.219 client.py                                 331 DEBUG    | session_status_changed_event_handler: id: BluetoothLE#BluetoothLEb4:0e:de:29:8f:50-e6:b1:9a:92:73:bd, error: 0, status: 1
+   MainThread:19:08:11.229 client.py                                 729 DEBUG    | returned from get_descriptors_async
+   MainThread:19:08:11.229 client.py                                 721 DEBUG    | calling get_descriptors_async
+   MainThread:19:08:11.229 client.py                                 729 DEBUG    | returned from get_descriptors_async
+   MainThread:19:08:11.229 client.py                                 704 DEBUG    | calling get_characteristics_async
+   MainThread:19:08:11.269 client.py                                 712 DEBUG    | returned from get_characteristics_async
+   MainThread:19:08:11.269 client.py                                 721 DEBUG    | calling get_descriptors_async
+   MainThread:19:08:11.269 client.py                                 729 DEBUG    | returned from get_descriptors_async
+   MainThread:19:08:11.269 client.py                                 721 DEBUG    | calling get_descriptors_async
+   MainThread:19:08:11.279 client.py                                 729 DEBUG    | returned from get_descriptors_async
+   MainThread:19:08:11.279 client.py                                 721 DEBUG    | calling get_descriptors_async
+   MainThread:19:08:11.279 client.py                                 729 DEBUG    | returned from get_descriptors_async
+   MainThread:19:08:11.279 client.py                                 721 DEBUG    | calling get_descriptors_async
+   MainThread:19:08:11.279 client.py                                 729 DEBUG    | returned from get_descriptors_async
+   MainThread:19:08:11.289 client.py                                 721 DEBUG    | calling get_descriptors_async
+   MainThread:19:08:11.289 client.py                                 729 DEBUG    | returned from get_descriptors_async
+   MainThread:19:08:11.289 client.py                                 704 DEBUG    | calling get_characteristics_async
+   MainThread:19:08:11.329 client.py                                 712 DEBUG    | returned from get_characteristics_async
+   MainThread:19:08:11.329 client.py                                 721 DEBUG    | calling get_descriptors_async
+   MainThread:19:08:11.329 client.py                                 729 DEBUG    | returned from get_descriptors_async
+   MainThread:19:08:11.329 client.py                                 721 DEBUG    | calling get_descriptors_async
+   MainThread:19:08:11.339 client.py                                 729 DEBUG    | returned from get_descriptors_async
+   MainThread:19:08:11.339 client.py                                 721 DEBUG    | calling get_descriptors_async
+   MainThread:19:08:11.339 client.py                                 729 DEBUG    | returned from get_descriptors_async
+   MainThread:19:08:11.339 client.py                                 721 DEBUG    | calling get_descriptors_async
+   MainThread:19:08:11.349 client.py                                 729 DEBUG    | returned from get_descriptors_async
+   MainThread:19:08:11.349 client.py                                 721 DEBUG    | calling get_descriptors_async
+   MainThread:19:08:11.349 client.py                                 729 DEBUG    | returned from get_descriptors_async
+   MainThread:19:08:11.349 client.py                                 721 DEBUG    | calling get_descriptors_async
+   MainThread:19:08:11.359 client.py                                 729 DEBUG    | returned from get_descriptors_async
+   MainThread:19:08:11.359 client.py                                 721 DEBUG    | calling get_descriptors_async
+   MainThread:19:08:11.359 client.py                                 729 DEBUG    | returned from get_descriptors_async
+   MainThread:19:08:11.359 client.py                                 721 DEBUG    | calling get_descriptors_async
+   MainThread:19:08:11.369 client.py                                 729 DEBUG    | returned from get_descriptors_async
+   MainThread:19:08:11.369 client.py                                 704 DEBUG    | calling get_characteristics_async
+   MainThread:19:08:11.389 client.py                                 712 DEBUG    | returned from get_characteristics_async
+   MainThread:19:08:11.389 client.py                                 721 DEBUG    | calling get_descriptors_async
+   MainThread:19:08:11.399 client.py                                 729 DEBUG    | returned from get_descriptors_async
+   MainThread:19:08:11.399 client.py                                 721 DEBUG    | calling get_descriptors_async
+   MainThread:19:08:11.399 client.py                                 729 DEBUG    | returned from get_descriptors_async
+   MainThread:19:08:11.399 client.py                                 704 DEBUG    | calling get_characteristics_async
+   MainThread:19:08:11.429 client.py                                 712 DEBUG    | returned from get_characteristics_async
+   MainThread:19:08:11.429 client.py                                 721 DEBUG    | calling get_descriptors_async
+   MainThread:19:08:11.439 client.py                                 729 DEBUG    | returned from get_descriptors_async
+   MainThread:19:08:11.439 client.py                                 721 DEBUG    | calling get_descriptors_async
+   MainThread:19:08:11.439 client.py                                 729 DEBUG    | returned from get_descriptors_async
+   MainThread:19:08:11.439 client.py                                 721 DEBUG    | calling get_descriptors_async
+   MainThread:19:08:11.449 client.py                                 729 DEBUG    | returned from get_descriptors_async
+   MainThread:19:08:11.449 client.py                                 721 DEBUG    | calling get_descriptors_async
+   MainThread:19:08:11.449 client.py                                 729 DEBUG    | returned from get_descriptors_async
+   MainThread:19:08:11.449 client.py                                 704 DEBUG    | calling get_characteristics_async
+   MainThread:19:08:11.469 client.py                                 712 DEBUG    | returned from get_characteristics_async
+   MainThread:19:08:11.479 client.py                                 721 DEBUG    | calling get_descriptors_async
+   MainThread:19:08:11.479 client.py                                 729 DEBUG    | returned from get_descriptors_async
+   MainThread:19:08:11.489 bleak_wrapper.py                          353 INFO     | Discovering characteristics...
+      Dummy-2:19:08:12.765 client.py                                 348 DEBUG    | max_pdu_size_changed_handler: 517
+   MainThread:19:08:12.885 client.py                                 834 DEBUG    | Read Descriptor 000C : bytearray(b'\x00\x00')
+   MainThread:19:08:13.000 client.py                                 834 DEBUG    | Read Descriptor 0027 : bytearray(b'\x00\x00')
+   MainThread:19:08:13.127 client.py                                 834 DEBUG    | Read Descriptor 002F : bytearray(b'\x00\x00')
+   MainThread:19:08:13.249 client.py                                 834 DEBUG    | Read Descriptor 0034 : bytearray(b'\x00\x00')
+   MainThread:19:08:13.365 client.py                                 834 DEBUG    | Read Descriptor 0039 : bytearray(b'\x00\x00')
+   MainThread:19:08:13.479 client.py                                 834 DEBUG    | Read Descriptor 003E : bytearray(b'\x00\x00')
+   MainThread:19:08:13.599 client.py                                 834 DEBUG    | Read Descriptor 0044 : bytearray(b'\x00\x00')
+   MainThread:19:08:13.729 client.py                                 834 DEBUG    | Read Descriptor 0048 : bytearray(b'\x00\x00')
+   MainThread:19:08:13.843 client.py                                 834 DEBUG    | Read Descriptor 004D : bytearray(b'\x00\x00')
+   MainThread:19:08:13.963 client.py                                 834 DEBUG    | Read Descriptor 0050 : bytearray(b'\x00\x00')
+   MainThread:19:08:13.963 bleak_wrapper.py                          398 INFO     | Done discovering characteristics!
+   MainThread:19:08:13.963 bleak_wrapper.py                          316 INFO     | Enabling notifications...
+   MainThread:19:08:15.040 bleak_wrapper.py                          322 INFO     | Done enabling notifications
+   MainThread:19:08:15.050 builders.py                               698 INFO     | 
+<<<<<<<<--------------
+    "id" : "REG_STATUS_VAL_UPDATE.StatusId.ENCODING",
+    "protocol" : "BLE",
+    "uuid" : "Query",
+<<<<<<<<--------------
+
+   MainThread:19:08:15.050 gopro_wireless.py                         640 DEBUG    | Writing to [Query] UUID: 02:53:0a
+   MainThread:19:08:15.166 gopro_wireless.py                         580 DEBUG    | Received response on BleUUID [Query Response]: 05:53:00:0a:01:00
+   MainThread:19:08:15.166 builders.py                               700 INFO     | 
+-------------->>>>>>>>
+    "id" : "QueryCmdId.REG_STATUS_VAL_UPDATE",
+    "status" : "ErrorCode.SUCCESS",
+    "protocol" : "Protocol.BLE",
+-------------->>>>>>>>
+
+   MainThread:19:08:15.174 builders.py                               698 INFO     | 
+<<<<<<<<--------------
+    "id" : "REG_STATUS_VAL_UPDATE.StatusId.SYSTEM_BUSY",
+    "protocol" : "BLE",
+    "uuid" : "Query",
+<<<<<<<<--------------
+
+   MainThread:19:08:15.174 gopro_wireless.py                         640 DEBUG    | Writing to [Query] UUID: 02:53:08
+   MainThread:19:08:15.283 gopro_wireless.py                         580 DEBUG    | Received response on BleUUID [Query Response]: 05:53:00:08:01:00
+   MainThread:19:08:15.283 builders.py                               700 INFO     | 
+-------------->>>>>>>>
+    "id" : "QueryCmdId.REG_STATUS_VAL_UPDATE",
+    "status" : "ErrorCode.SUCCESS",
+    "protocol" : "Protocol.BLE",
+-------------->>>>>>>>
+
+   MainThread:19:08:15.291 gopro_wireless.py                         507 INFO     | BLE is ready!
+   MainThread:19:08:15.379 builders.py                               130 INFO     | 
+<<<<<<<<--------------
+    "id" : "CmdId.SET_DATE_TIME_DST",
+    "protocol" : "BLE",
+    "uuid" : "Command",
+    "date_time" : "2023-12-05 19:08:15.379734-05:00",
+    "tz_offset" : "-300",
+    "is_dst" : "False",
+<<<<<<<<--------------
+
+   MainThread:19:08:15.390 gopro_wireless.py                         640 DEBUG    | Writing to [Command] UUID: 09:0f:07:07:e7:0c:05:13:08:0f
+   MainThread:19:08:15.466 gopro_wireless.py                         580 DEBUG    | Received response on BleUUID [Command Response]: 02:0f:02
+   MainThread:19:08:15.470 gopro_wireless.py                         652 WARNING  | Received non-success status: ErrorCode.INVALID_PARAM
+   MainThread:19:08:15.470 builders.py                               145 INFO     | 
+-------------->>>>>>>>
+    "id" : "CmdId.SET_DATE_TIME_DST",
+    "status" : "ErrorCode.INVALID_PARAM",
+    "protocol" : "Protocol.BLE",
+-------------->>>>>>>>
+
+   MainThread:19:08:15.480 gopro_wireless.py                         340 ERROR    | Error while opening: 
+   MainThread:19:08:15.482 util.py                                   210 DEBUG    | Send cmd --> netsh wlan disconnect interface="Wi-Fi"
+   MainThread:19:08:15.696 util.py                                   216 DEBUG    | Receive response --> Disconnection request was completed successfully for interface "Wi-Fi".
+
+   MainThread:19:08:15.696 client.py                                 130 INFO     | Terminating the BLE connection
+   MainThread:19:08:15.706 bleak_wrapper.py                          408 INFO     | Disconnecting...
+   MainThread:19:08:15.716 client.py                                 468 DEBUG    | Disconnecting from BLE device...
+      Dummy-3:19:08:18.881 client.py                                 348 DEBUG    | max_pdu_size_changed_handler: 23
+      Dummy-3:19:08:18.881 client.py                                 331 DEBUG    | session_status_changed_event_handler: id: BluetoothLE#BluetoothLEb4:0e:de:29:8f:50-e6:b1:9a:92:73:bd, error: 0, status: 0
+   MainThread:19:08:18.891 client.py                                 283 DEBUG    | closing requester
+   MainThread:19:08:18.891 client.py                                 300 DEBUG    | closing session
+   MainThread:19:08:18.891 bleak_wrapper.py                          411 INFO     | Device disconnected!
+   MainThread:19:08:18.891 photo.py                                   53 ERROR    | AssertionError()
