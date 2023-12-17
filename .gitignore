@@ -2,5 +2,3 @@
 .venv
 .venv/
 ppt_img_pipeline/
-*.png
-*.jpg

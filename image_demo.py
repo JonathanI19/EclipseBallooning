@@ -26,6 +26,8 @@ def main():
 
         # Read in image
         img = cv2.imread("./images/"+input_img)
+        img_hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
+
 
         # We need to set resolutions. 
         # frame_width = int(img.get(cv2.CAP_PROP_FRAME_WIDTH)) 
@@ -44,7 +46,6 @@ def main():
 
         cProc.set_frame(img)
         cProc.convert_frame()
-        img_hsv = cProc.get_frame()
         cProc.split_frame()
         (q0,q1,q2,q3) = cProc.get_quadrants()
 
