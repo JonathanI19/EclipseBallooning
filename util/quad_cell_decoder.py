@@ -7,8 +7,8 @@
 # imports
 from math import sqrt
 from statistics import variance
-from .stepper_controller import STEPPER_DIRECTION
-from .stepper_controller import StepperController
+# from .stepper_controller import STEPPER_DIRECTION
+# from .stepper_controller import StepperController
 
 class QuadCellDecoder:
     """ The QuadCellDecoder class.
@@ -28,7 +28,7 @@ class QuadCellDecoder:
         self.__quadrant_intensities = ()
         self.__quadrant_variance = 0
         self.__brightest_quadrants = []
-        self.__stepper_controller = StepperController(is_rpi = True)
+        # self.__stepper_controller = StepperController(is_rpi = True)
 
         # Coefficient for sensitivity modification
         self.std_dev_coefficient = std_dev_coefficient
@@ -107,54 +107,8 @@ class QuadCellDecoder:
             #         brightest value.
             threshold = max_intensity - (self.std_dev_coefficient*std_dev)
             self.__brightest_quadrants = [True if val >= threshold else False for val in self.__quadrant_intensities]
-
-    def decode_brightness_into_direction(self):
-        """ Determines stepper motor inputs based on quadrant brightness.
-
-        @return    None
-        """
-
-        # at this point, self.__brightest_quadrants encodes which
-        # quadrants we consider the 'brightest'; to improve efficiency,
-        # we change from a tuple to an int
-        stepper_code = 0
-        for i, val in enumerate(self.__brightest_quadrants):
-            stepper_code = stepper_code + (val*pow(2, (4-i-1)))
-
-        # decode the binary string
-        if stepper_code == 0b0000:
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.STOP)
-        elif stepper_code == 0b0001:
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT_TILT_DOWN)
-        elif stepper_code == 0b0010:
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT_TILT_DOWN)
-        elif stepper_code == 0b0011:
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.TILT_DOWN)
-        elif stepper_code == 0b0100:
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT_TILT_UP)
-        elif stepper_code == 0b0101:
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.STOP)
-        elif stepper_code == 0b0110:
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
-        elif stepper_code == 0b0111:
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT_TILT_DOWN)
-        elif stepper_code == 0b1000:
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT_TILT_UP)
-        elif stepper_code == 0b1001:
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
-        elif stepper_code == 0b1010:
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.STOP)
-        elif stepper_code == 0b1011:
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT_TILT_DOWN)
-        elif stepper_code == 0b1100:
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.TILT_UP)
-        elif stepper_code == 0b1101:
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT_TILT_UP)
-        elif stepper_code == 0b1110:
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT_TILT_UP)
-        elif stepper_code == 0b1111:
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.STOP)
-
+            
+            
     def get_quadrant_intensities(self):
         """ Gets __quadrant_intensities member variable.
 
