@@ -3,3 +3,4 @@
 .venv/
 ppt_img_pipeline/
 .GoProVenv
+*.log
