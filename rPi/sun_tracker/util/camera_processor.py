@@ -25,7 +25,7 @@ class CameraProcessor:
         self.__half_height = self.__height//2
 
         # Pixel density
-        self.self.__pxl = self.__half_width*self.__half_height
+        self.__pxl = self.__half_width*self.__half_height
 
         # Initialize frame to none
         self.__frame = None
