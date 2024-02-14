@@ -101,16 +101,16 @@ class CameraProcessor:
         q0, q1, q2, q3 = self.get_quadrants()
 
         v0 = np.sum(q0[:,:,2])
-        avg_v0 = v0 / self.self.__pxl
+        avg_v0 = v0 / self.__pxl
 
         v1 = np.sum(q1[:,:,2])
-        avg_v1 = v1 / self.self.__pxl
+        avg_v1 = v1 / self.__pxl
 
         v2 = np.sum(q2[:,:,2])
-        avg_v2 = v2 / self.self.__pxl
+        avg_v2 = v2 / self.__pxl
 
         v3 = np.sum(q3[:,:,2])
-        avg_v3 = v3 / self.self.__pxl
+        avg_v3 = v3 / self.__pxl
 
         return(avg_v0, avg_v1, avg_v2, avg_v3)
     
