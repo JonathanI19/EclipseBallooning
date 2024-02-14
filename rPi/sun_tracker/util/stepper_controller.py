@@ -22,24 +22,18 @@ class StepperController:
     stepper directions.
     """
 
-    def __init__(self, pan_stepper = None, tilt_stepper = None):
+    def __init__(self):
         """ Constructor """
 
         # initialize class data
-        self.__pan_stepper = pan_stepper
-        self.__tilt_stepper = tilt_stepper
         self.__movement_queue = []
 
         # initialize GPIO pins
         self.__PC0 = 19
         self.__PC1 = 26
-        self.__TC0 = 20
-        self.__TC1 = 21
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.__PC0, GPIO.OUT)
         GPIO.setup(self.__PC1, GPIO.OUT)
-        GPIO.setup(self.__TC0, GPIO.OUT)
-        GPIO.setup(self.__TC1, GPIO.OUT)
 
     def move_steppers(self):
         """ Move steppers based on commands stored in movement queue.
@@ -57,48 +51,30 @@ class StepperController:
             if cmd == STEPPER_DIRECTION.PAN_LEFT:
                 GPIO.output(self.__PC0, GPIO.HIGH)
                 GPIO.output(self.__PC1, GPIO.LOW)
-                GPIO.output(self.__TC0, GPIO.LOW)
-                GPIO.output(self.__TC1, GPIO.LOW)
             elif cmd == STEPPER_DIRECTION.PAN_RIGHT:
                 GPIO.output(self.__PC0, GPIO.LOW)
                 GPIO.output(self.__PC1, GPIO.HIGH)
-                GPIO.output(self.__TC0, GPIO.LOW)
-                GPIO.output(self.__TC1, GPIO.LOW)
             elif cmd == STEPPER_DIRECTION.TILT_UP:
                 GPIO.output(self.__PC0, GPIO.LOW)
                 GPIO.output(self.__PC1, GPIO.LOW)
-                GPIO.output(self.__TC0, GPIO.HIGH)
-                GPIO.output(self.__TC1, GPIO.LOW)
             elif cmd == STEPPER_DIRECTION.TILT_DOWN:
                 GPIO.output(self.__PC0, GPIO.LOW)
                 GPIO.output(self.__PC1, GPIO.LOW)
-                GPIO.output(self.__TC0, GPIO.LOW)
-                GPIO.output(self.__TC1, GPIO.HIGH)
             elif cmd == STEPPER_DIRECTION.PAN_LEFT_TILT_UP:
                 GPIO.output(self.__PC0, GPIO.HIGH)
                 GPIO.output(self.__PC1, GPIO.LOW)
-                GPIO.output(self.__TC0, GPIO.HIGH)
-                GPIO.output(self.__TC1, GPIO.LOW)
             elif cmd == STEPPER_DIRECTION.PAN_LEFT_TILT_DOWN:
                 GPIO.output(self.__PC0, GPIO.HIGH)
                 GPIO.output(self.__PC1, GPIO.LOW)
-                GPIO.output(self.__TC0, GPIO.LOW)
-                GPIO.output(self.__TC1, GPIO.HIGH)
             elif cmd == STEPPER_DIRECTION.PAN_RIGHT_TILT_UP:
                 GPIO.output(self.__PC0, GPIO.LOW)
                 GPIO.output(self.__PC1, GPIO.HIGH)
-                GPIO.output(self.__TC0, GPIO.HIGH)
-                GPIO.output(self.__TC1, GPIO.LOW)
             elif cmd == STEPPER_DIRECTION.PAN_RIGHT_TILT_DOWN:
                 GPIO.output(self.__PC0, GPIO.LOW)
                 GPIO.output(self.__PC1, GPIO.HIGH)
-                GPIO.output(self.__TC0, GPIO.LOW)
-                GPIO.output(self.__TC1, GPIO.HIGH)
             else:
                 GPIO.output(self.__PC0, GPIO.LOW)
                 GPIO.output(self.__PC1, GPIO.LOW)
-                GPIO.output(self.__TC0, GPIO.LOW)
-                GPIO.output(self.__TC1, GPIO.LOW)
 
     def push_movement_command(self, new_cmd):
 
