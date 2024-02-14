@@ -9,26 +9,26 @@ from util.quad_cell_decoder import QuadCellDecoder
 from util.stepper_controller import StepperController
 from util.stepper_controller import STEPPER_DIRECTION
 
+@pytest.fixture
+def setup():
+    stepper_controller = StepperController()
+    yield stepper_controller
+    stepper_controller.cleanup()
+
 class TestQuadCellDecoder:
     """ Test class for QuadCellDecoder.
 
     Unit testing for QuadCellDecoder.
     """
 
-    def __init__(self):
-        self.stepper_controller = StepperController()
-
-    def __del__(self):
-        self.stepper_controller.cleanup()
-
-    def test_set_intensity_values_nominal(self):
+    def test_set_intensity_values_nominal(self, setup):
         """ Verify normal functionality of set_intensity_values.
 
         @return    None
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder(self.stepper_controller)
+        quad_cell_decoder_UUT = QuadCellDecoder(setup.stepper_controller)
 
         # create test input
         test_intensities = (102, 405, 34, 8)
