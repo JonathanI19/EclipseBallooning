@@ -15,11 +15,11 @@ class TestQuadCellDecoder:
     Unit testing for QuadCellDecoder.
     """
 
-    @pytest.fixture
-    def setup(self):
-        stepper_controller = StepperController()
-        yield stepper_controller
-        stepper_controller.cleanup()
+    def __init__(self):
+        self.stepper_controller = StepperController()
+
+    def __del__(self):
+        self.stepper_controller.cleanup()
 
     def test_set_intensity_values_nominal(self):
         """ Verify normal functionality of set_intensity_values.
@@ -28,7 +28,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder(stepper_controller)
+        quad_cell_decoder_UUT = QuadCellDecoder(self.stepper_controller)
 
         # create test input
         test_intensities = (102, 405, 34, 8)
@@ -41,9 +41,6 @@ class TestQuadCellDecoder:
         for i in range(0, 3):
             assert test_output[i] == test_intensities[i]
 
-        # cleanup
-        quad_cell_decoder_UUT.__stepper_controller.cleanup()
-
     def test_set_intensity_values_wrong_type(self):
         """ Verify exception raised when wrong type provided.
 
@@ -54,7 +51,7 @@ class TestQuadCellDecoder:
         with pytest.raises(Exception) as e:
 
             # instantiate the UUT
-            quad_cell_decoder_UUT = QuadCellDecoder(stepper_controller)
+            quad_cell_decoder_UUT = QuadCellDecoder(self.stepper_controller)
 
             # create the test input (list instead of tuple)
             test_intensities = [102, 405, 34, 8]
@@ -75,7 +72,7 @@ class TestQuadCellDecoder:
         with pytest.raises(Exception) as e:
 
             # instantiate the UUT
-            quad_cell_decoder_UUT = QuadCellDecoder(stepper_controller)
+            quad_cell_decoder_UUT = QuadCellDecoder(self.stepper_controller)
 
             # create the test input (too large)
             test_intensities = (102, 405, 34, 8, 5)
@@ -94,7 +91,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder(stepper_controller)
+        quad_cell_decoder_UUT = QuadCellDecoder(self.stepper_controller)
 
         # create test input
         test_intensities = (102, 405, 34, 8)
@@ -114,7 +111,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder(stepper_controller)
+        quad_cell_decoder_UUT = QuadCellDecoder(self.stepper_controller)
 
         # create test input
         test_intensities = (65, -405, -123455, 554321)
@@ -134,7 +131,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder(stepper_controller)
+        quad_cell_decoder_UUT = QuadCellDecoder(self.stepper_controller)
 
         # create test input
         # - note that the brightest quadrant is Q2 with intensity 405
@@ -162,7 +159,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder(stepper_controller)
+        quad_cell_decoder_UUT = QuadCellDecoder(self.stepper_controller)
 
         # create test input
         # - note that the brightest quadrant is Q4 with intensity 1000
@@ -190,7 +187,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder(stepper_controller)
+        quad_cell_decoder_UUT = QuadCellDecoder(self.stepper_controller)
 
         # create test input
         # - the standard deviation of this data is 4594.056
@@ -216,7 +213,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder(stepper_controller)
+        quad_cell_decoder_UUT = QuadCellDecoder(self.stepper_controller)
 
         # create test input
         test_intensities = (124, 123, 120, 126)
@@ -242,7 +239,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder(stepper_controller)
+        quad_cell_decoder_UUT = QuadCellDecoder(self.stepper_controller)
 
         # create test input
         test_intensities = (36788, 456, 12358, 129299)
@@ -268,7 +265,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder(stepper_controller)
+        quad_cell_decoder_UUT = QuadCellDecoder(self.stepper_controller)
 
         # create test input
         test_intensities = (36788, 456, 129299, 12358)
@@ -294,7 +291,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder(stepper_controller)
+        quad_cell_decoder_UUT = QuadCellDecoder(self.stepper_controller)
 
         # create test input
         test_intensities = (36788, 456, 129299, 135000)
@@ -320,7 +317,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder(stepper_controller)
+        quad_cell_decoder_UUT = QuadCellDecoder(self.stepper_controller)
 
         # create test input
         test_intensities = (36788, 129299, 456, 12358)
@@ -346,7 +343,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder(stepper_controller)
+        quad_cell_decoder_UUT = QuadCellDecoder(self.stepper_controller)
 
         # create test input
         test_intensities = (36788, 129299, 456, 135000)
@@ -372,7 +369,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder(stepper_controller)
+        quad_cell_decoder_UUT = QuadCellDecoder(self.stepper_controller)
 
         # create test input
         test_intensities = (36788, 129299, 135000, 456)
@@ -398,7 +395,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder(stepper_controller)
+        quad_cell_decoder_UUT = QuadCellDecoder(self.stepper_controller)
 
         # create test input
         test_intensities = (36788, 129299, 135000, 120000)
@@ -424,7 +421,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder(stepper_controller)
+        quad_cell_decoder_UUT = QuadCellDecoder(self.stepper_controller)
 
         # create test input
         test_intensities = (129299, 36788, 456, 36788)
@@ -450,7 +447,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder(stepper_controller)
+        quad_cell_decoder_UUT = QuadCellDecoder(self.stepper_controller)
 
         # create test input
         test_intensities = (129299, 36788, 456, 135000)
@@ -476,7 +473,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder(stepper_controller)
+        quad_cell_decoder_UUT = QuadCellDecoder(self.stepper_controller)
 
         # create test input
         test_intensities = (129299, 36788, 135000, 456)
@@ -502,7 +499,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder(stepper_controller)
+        quad_cell_decoder_UUT = QuadCellDecoder(self.stepper_controller)
 
         # create test input
         test_intensities = (129299, 36788, 120000, 135000)
@@ -528,7 +525,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder(stepper_controller)
+        quad_cell_decoder_UUT = QuadCellDecoder(self.stepper_controller)
 
         # create test input
         test_intensities = (129299, 120000, 12358, 36788)
@@ -554,7 +551,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder(stepper_controller)
+        quad_cell_decoder_UUT = QuadCellDecoder(self.stepper_controller)
 
         # create test input
         test_intensities = (129299, 120000, 456, 135000)
@@ -580,7 +577,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder(stepper_controller)
+        quad_cell_decoder_UUT = QuadCellDecoder(self.stepper_controller)
 
         # create test input
         test_intensities = (129299, 120000, 135000, 456)
@@ -606,7 +603,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder(stepper_controller)
+        quad_cell_decoder_UUT = QuadCellDecoder(self.stepper_controller)
 
         # create test input
         test_intensities = (129299, 120000, 120456, 135000)
