@@ -55,24 +55,6 @@ class StepperController:
             elif cmd == STEPPER_DIRECTION.PAN_RIGHT:
                 GPIO.output(self.__PC0, GPIO.LOW)
                 GPIO.output(self.__PC1, GPIO.HIGH)
-            elif cmd == STEPPER_DIRECTION.TILT_UP:
-                GPIO.output(self.__PC0, GPIO.LOW)
-                GPIO.output(self.__PC1, GPIO.LOW)
-            elif cmd == STEPPER_DIRECTION.TILT_DOWN:
-                GPIO.output(self.__PC0, GPIO.LOW)
-                GPIO.output(self.__PC1, GPIO.LOW)
-            elif cmd == STEPPER_DIRECTION.PAN_LEFT_TILT_UP:
-                GPIO.output(self.__PC0, GPIO.HIGH)
-                GPIO.output(self.__PC1, GPIO.LOW)
-            elif cmd == STEPPER_DIRECTION.PAN_LEFT_TILT_DOWN:
-                GPIO.output(self.__PC0, GPIO.HIGH)
-                GPIO.output(self.__PC1, GPIO.LOW)
-            elif cmd == STEPPER_DIRECTION.PAN_RIGHT_TILT_UP:
-                GPIO.output(self.__PC0, GPIO.LOW)
-                GPIO.output(self.__PC1, GPIO.HIGH)
-            elif cmd == STEPPER_DIRECTION.PAN_RIGHT_TILT_DOWN:
-                GPIO.output(self.__PC0, GPIO.LOW)
-                GPIO.output(self.__PC1, GPIO.HIGH)
             else:
                 GPIO.output(self.__PC0, GPIO.LOW)
                 GPIO.output(self.__PC1, GPIO.LOW)
