@@ -25,11 +25,11 @@ class TestStepperController:
 
         # call the function under test
         stepper_controller_UUT.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
-        stepper_controller_UUT.push_movement_command(STEPPER_DIRECTION.TILT_UP)
+        stepper_controller_UUT.push_movement_command(STEPPER_DIRECTION.STOP)
 
         # verify output
         assert stepper_controller_UUT.view_movement_queue()[0] == STEPPER_DIRECTION.PAN_LEFT
-        assert stepper_controller_UUT.view_movement_queue()[1] == STEPPER_DIRECTION.TILT_UP
+        assert stepper_controller_UUT.view_movement_queue()[1] == STEPPER_DIRECTION.STOP
 
     def test_push_movement_command_wrong_type(self):
         """ Verify exception raised when wrong type provided.
