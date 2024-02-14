@@ -29,6 +29,7 @@ class StepperController:
         self.__movement_queue = []
 
         # initialize GPIO pins
+        GPIO.cleanup()
         self.__PC0 = 19
         self.__PC1 = 26
         GPIO.setmode(GPIO.BCM)
@@ -99,7 +100,5 @@ class StepperController:
         """
         GPIO.output(self.__PC0, GPIO.LOW)
         GPIO.output(self.__PC1, GPIO.LOW)
-        GPIO.output(self.__TC0, GPIO.LOW)
-        GPIO.output(self.__TC1, GPIO.LOW)
         GPIO.cleanup()
     
