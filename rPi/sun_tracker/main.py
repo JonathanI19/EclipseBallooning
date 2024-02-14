@@ -4,6 +4,7 @@ import socket
 import pickle
 from util.camera_processor import CameraProcessor
 from util.quad_cell_decoder import QuadCellDecoder
+from util.stepper_controller import StepperController
 from util.streaming import StreamingOutput, StreamingHandler, StreamingServer
 from picamera2 import Picamera2
 import argparse
@@ -66,11 +67,14 @@ def main(args):
     frame_count = 0
     samples_per_second = 24
 
+    # Create StepperController object
+    sCon = StepperController()
+
     # Create CameraProcessor object and pass in size of frame
     cProc = CameraProcessor(size)
 
     # Create a QuadCellDecoder object to process the input frame
-    qcDec = QuadCellDecoder()
+    qcDec = QuadCellDecoder(sCon)
 
     # loop runs if capturing has been initialized. 
     while(True):

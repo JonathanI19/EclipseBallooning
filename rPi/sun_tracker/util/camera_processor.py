@@ -18,14 +18,17 @@ class CameraProcessor:
         self.__q1 = []
         self.__q2 = []
         self.__q3 = []
-        self.w, self.h = size
+        self.__width, self.__height = size
 
         # Half of the w/h of frame rounded down
-        self.half_w = self.w//2
-        self.half_h = self.h//2
+        self.__half_width = self.__width//2
+        self.__half_height = self.__height//2
 
         # Pixel density
-        self.pxl = self.half_w*self.half_h
+        self.self.__pxl = self.__half_width*self.__half_height
+
+        # Initialize frame to none
+        self.__frame = None
 
     def set_frame(self, frame):
         """Sets new frame for processing
@@ -76,7 +79,7 @@ class CameraProcessor:
         #        [2]   |   [3]
         #              |
                
-        self.set_quadrants(self.__frame[:self.half_h, self.half_w:], self.__frame[:self.half_h, :self.half_w], self.__frame[self.half_h:, :self.half_w], self.__frame[self.half_h:, self.half_w:])
+        self.set_quadrants(self.__frame[:self.__half_height, self.__half_width:], self.__frame[:self.__half_height, :self.__half_width], self.__frame[self.__half_height:, :self.__half_width], self.__frame[self.__half_height:, self.__half_width:])
     
     def get_quadrants(self):
         """gets __q0, __q1, __q2, __q3 member variables
@@ -98,16 +101,16 @@ class CameraProcessor:
         q0, q1, q2, q3 = self.get_quadrants()
 
         v0 = np.sum(q0[:,:,2])
-        avg_v0 = v0 / self.pxl
+        avg_v0 = v0 / self.self.__pxl
 
         v1 = np.sum(q1[:,:,2])
-        avg_v1 = v1 / self.pxl
+        avg_v1 = v1 / self.self.__pxl
 
         v2 = np.sum(q2[:,:,2])
-        avg_v2 = v2 / self.pxl
+        avg_v2 = v2 / self.self.__pxl
 
         v3 = np.sum(q3[:,:,2])
-        avg_v3 = v3 / self.pxl
+        avg_v3 = v3 / self.self.__pxl
 
         return(avg_v0, avg_v1, avg_v2, avg_v3)
     
@@ -124,8 +127,8 @@ class CameraProcessor:
             List: New frame to be displayed
         """        
         new_frame = self.get_frame()
-        new_frame[:self.half_h, self.half_w:] = q0
-        new_frame[:self.half_h, :self.half_w] = q1
-        new_frame[self.half_h:, :self.half_w] = q2
-        new_frame[self.half_h:, self.half_w:] = q3
+        new_frame[:self.__half_height, self.__half_width:] = q0
+        new_frame[:self.__half_height, :self.__half_width] = q1
+        new_frame[self.__half_height:, :self.__half_width] = q2
+        new_frame[self.__half_height:, self.__half_width:] = q3
         return new_frame
