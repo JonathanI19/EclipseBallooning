@@ -80,7 +80,7 @@ def main(args):
     cProc = CameraProcessor(size)
 
     # Create SolarSensorDecoder object to process ADC values
-    ssCon = SolarSensorDecoder(sCon)
+    ssCon = SolarSensorDecoder(0, False, sCon)
 
     # Create a QuadCellDecoder object to process the input frame
     qcDec = QuadCellDecoder(sCon)
@@ -110,7 +110,11 @@ def main(args):
         
         # Executes brightness evaluation at specified sampling rate
         if(frame_count == (fps//samples_per_second)):
+
+            # reset frame count
             frame_count = 0
+
+            # we only perform quad-cell algorithm if camera diode is aligned with (or away from) sun
             if (process_current_adc_data(sCon, ssCon, (0,0,0,0))):
                 cProc.set_frame(frame)
                 cProc.convert_frame()
