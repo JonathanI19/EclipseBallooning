@@ -2,107 +2,103 @@
 
 ' Define classes
 
-package "sun_tracker" #DDDDDD
+package "sun_tracker/util" #DDDDDD
 {
 
-class PiCamera <existing>
+entity main <existing>
 {
 }
 
 class CameraProcessor <new>
 {
-    - {field}__frame : list(int) 
-    - {field}__q0 : list(int)
-    - {field}__q1 : list(int)
-    - {field}__q2 : list(int)
-    - {field}__q3 : list(int)
-    - w : int
-    - h : int
-    - half_w : int
-    - half_h : int
-    - pxl : int
-    + __init__(\n\
-        size : tuple(int))
-    + set_frame(\n\
-        frame : list(int)) -> None
-    + get_frame() -> list(int)
-    + convert_frame() -> None
-    + set_quadrants(\n\
-        q0 : list(int),\n\
-        q1 : list(int),\n\
-        q2 : list(int),\n\
-        q3 : list(int)) -> None
-    + split_frame() -> None
-    + get_quadrants() -> tuple(list(int))
-    + compute_brightness() -> tuple(float)
-    + recombine() -> list(int)
+    - {field}**__frame** : npt.NDArray[np.uint8]
+    - {field}**__q0** : npt.NDArray[np.uint8]
+    - {field}**__q1** : npt.NDArray[np.uint8]
+    - {field}**__q2** : npt.NDArray[np.uint8]
+    - {field}**__q3** : npt.NDArray[np.uint8]
+    - {field}**__width**: int
+    - {field}**__height** : int
+    - {field}**__half_width** : int
+    - {field}**__half_height** : int
+    - {field}**__pxl** : int
+    + **__init__**(\n\
+        size : tuple[int, int])
+    + **set_frame**(\n\
+        frame : npt.NDArray[np.uint8]) <U+27F6> None
+    + **get_frame**() <U+27F6> npt.NDArray[np.uint8]
+    + **convert_frame**() <U+27F6> None
+    + **set_quadrants**(\n\
+        q0 : npt.NDArray[np.uint8],\n\
+        q1 : npt.NDArray[np.uint8],\n\
+        q2 : npt.NDArray[np.uint8],\n\
+        q3 : npt.NDArray[np.uint8]) <U+27F6> None
+    + **split_frame**() <U+27F6> None
+    + **get_quadrants**() <U+27F6> tuple[npt.NDArray[np.uint8] (x4)]
+    + **compute_brightness**() <U+27F6> tuple[float]
+    + **recombine**() <U+27F6> npt.NDArray[np.uint8]
 }
-
-' class QuadCellProcessor <new>
-' {
-'     + __init__()
-'     + set_current_voltages(\n\
-'         input_voltages : tuple(float)) -> None
-'     + get_computed_values() -> tuple(float)
-' }
 
 class QuadCellDecoder <new>
 {
-    - {field}__quadrant_intensities : tuple(float)
-    - {field}__quadrant_variance : float
-    - {field}__brightest_quadrants : list(bool)
-    - {field}__servo_controller : ServoController
-    - std_dev_coefficient : float
-    - movement_cutoff : float
-    + __init__(\n\
-        std_dev_coefficinet : float,\n\
-        movement_cutoff : float)
-    + set_intensity_values(\n\
-        input_intensities : tuple(float)) -> None
-    + compute_quadrant_variance() -> None
-    + locate_brightest_quadrants() -> None
-    + decode_brightness_into_direction() -> None
-    + get_quadrant_intensities() -> tuple(float)
-    + get_quadrant_variance() -> float
-    + get_brightest_quadrants() -> tuple(bool)
-    + get_servo_controller() -> ServoController
+    - {field}**__quadrant_intensities** : tuple[float (x4)]
+    - {field}**__quadrant_variance** : float
+    - {field}**__brightest_quadrants** : list[bool]
+    - {field}**__stepper_controller** : StepperController
+    - {field}**__std_dev_coefficient** : float
+    - {field}**__movement_cutoff** : float
+    + **__init__**(\n\
+        std_dev_coefficinet : float = 1,\n\
+        movement_cutoff : float = 0.1)
+    + **set_intensity_values**(\n\
+        input_intensities : tuple[float (x4)]) <U+27F6> None
+    + **compute_quadrant_variance**() <U+27F6> None
+    + **locate_brightest_quadrants**() <U+27F6> None
+    + **decode_brightness_into_direction**() <U+27F6> None
+    + **get_quadrant_intensities**() <U+27F6> tuple[float (x4)]
+    + **get_quadrant_variance**() <U+27F6> float
+    + **get_brightest_quadrants**() <U+27F6> tuple[bool (x4)]
+    + **get_stepper_controller**() <U+27F6> StepperController
 }
 
-enum SERVO_DIRECTION
+class SolarSensorDecoder <new>
 {
+    - {field}**__aligned_quadrant** : int
+    - {field}**__dark_flag** : bool
+    - {field}**__stepper_controller** : StepperController
+    + **__init__**(\n\
+        aligned_quadrant : int,\n\
+        dark_flag : bool,\n\
+        stepper_controller : StepperController)
+    + **decode_brightness_into_action**(\n\
+        input_adc_values : tuple[float (x4)]) <U+27F6> bool
+}
+
+enum STEPPER_DIRECTION
+{
+    STOP
     PAN_LEFT
     PAN_RIGHT
-    TILT_UP
-    TILT_DOWN
 }
 
-class ServoController <new>
+class StepperController <new>
 {
-    - __pan_servo : ServoMotor
-    - __tilt_servo : ServoMotor
-    - {field}__movement_queue : list(SERVO_DIRECTION)
-    + __init__(\n\
-        pan_servo : ServoMotor,\n\
-        tilt_servo : ServoMotor)
-    + move_servos() -> None
-    + push_movement_command(\n\
-        new_cmd : SERVO_DIRECTION)
-    + view_movement_queue() -> list(SERVO_DIRECTION)
-}
-
-class ServoMotor <new>
-{
-    + __init__()
+    - {field}**__movement_queue** : list[STEPPER_DIRECTION]
+    + **__init__**()
+    + **move_steppers**() <U+27F6> None
+    + **push_movement_command**(\n\
+        new_cmd : STEPPER_DIRECTION)
+    + **view_movement_queue**() <U+27F6> list[STEPPER_DIRECTION]
 }
 
 ' Define class relations
 
-PiCamera ..> CameraProcessor
-CameraProcessor ..> QuadCellDecoder
-' QuadCellProcessor ..> QuadCellDecoder
-QuadCellDecoder *-- ServoController
-QuadCellDecoder .. SERVO_DIRECTION
-ServoController .. SERVO_DIRECTION
-ServoController *-- ServoMotor : many
+main --> CameraProcessor: constructs
+main --> StepperController: constructs
+main --> QuadCellDecoder: constructs
+main --> SolarSensorDecoder: constructs
+QuadCellDecoder ..> StepperController: has reference
+SolarSensorDecoder ..> StepperController: has reference
+QuadCellDecoder . STEPPER_DIRECTION
+StepperController . STEPPER_DIRECTION
 
 }

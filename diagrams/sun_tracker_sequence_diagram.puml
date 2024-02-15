@@ -3,12 +3,10 @@
 ' Define participants
 participant "Main Program" as mp
 participant "Camera" as cam
-' participant "Quad-Cell" as qc
 participant "CameraProcessor" as cp
-participant "QuadCellProcessor" as qcp
 participant "QuadCellDecoder" as qcd
-participant "ServoController" as sc
-participant "ServoMotor" as sm
+participant "SolarSensorDecoder" as scd
+participant "StepperController" as sc
 
 ' Define relations and datapath
 ' alt Data collected via Pi camera
@@ -26,11 +24,15 @@ participant "ServoMotor" as sm
 'end
 
 mp -> cam : initialize camera and OpenCV2 video capture
+mp -> cp : constructs w/ **CameraProcessor(size)**
+mp -> sc : constructs w/ **StepperController()**
+mp -> qcd : constructs & provides reference to StepperController singleton w/ **QuadCellDecoder(sCon)**
+mp -> scd : constructs & provides reference to StepperController singleton w/ **SolarSensorDecoder(sCon)**
 loop For each input frame ...
 mp -> cam : read input frame via OpenCV2 library
 cam --> mp
-mp -> cp : set_frame(frame)
-mp -> cp : convert_frame()
+mp -> cp : **set_frame(frame)** (from //process_current_frame(...)//)
+mp -> cp : **convert_frame()** 
 mp -> cp : split_frame()
 mp -> cp : get_quadrants()
 cp --> mp
@@ -44,7 +46,7 @@ qcd -> sc : push_movement_command(SERVO_DIRECTION.PAN_LEFT)
 mp -> qcd : get_servo_controller()
 qcd --> mp
 mp -> sc : move_servos()
-sc -> sm : move servos in proper directions\nvia hardware interfacing
+sc -> sm : move servos in proper directions\nvia Arduino Nano coprocessor
 end
 
 @enduml
