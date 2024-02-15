@@ -31,4 +31,11 @@ class SolarSensorDecoder:
 
         @return    bool
         """
-        pass
+        return True
+    
+    def get_stepper_controller(self):
+        """ Gets __stepper_controller member variable.
+
+        @return    tuple(bool)
+        """
+        return self.__stepper_controller

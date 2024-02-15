@@ -2,7 +2,7 @@
 
 ' Define classes
 
-package "sun_tracker/util" #DDDDDD
+package "sun_tracker" #DDDDDD
 {
 
 entity main <existing>
@@ -71,6 +71,7 @@ class SolarSensorDecoder <new>
         stepper_controller : StepperController)
     + **decode_brightness_into_action**(\n\
         input_adc_values : tuple[float (x4)]) <U+27F6> bool
+    + **get_stepper_controller**() <U+27F6> StepperController
 }
 
 enum STEPPER_DIRECTION
