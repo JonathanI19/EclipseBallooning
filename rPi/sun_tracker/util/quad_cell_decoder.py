@@ -17,10 +17,11 @@ class QuadCellDecoder:
     and instructs stepper motor to take action.
     """
 
-    def __init__(self, std_dev_coefficient = 1, movement_cutoff = 0.1):
+    def __init__(self, stepper_controller, std_dev_coefficient = 1, movement_cutoff = 0.1):
         """Constructor
 
         Args:
+            sCon (StepperController) : StepperController class instance
             std_dev_coefficient (int, optional): Modifies senstitivity of brightest quadrant(s) detection. Defaults to 1.
             movement_cutoff (float, optional): Modifies sensitivity of threshold where movement stops. Defaults to 0.1.
         """    
@@ -28,13 +29,13 @@ class QuadCellDecoder:
         self.__quadrant_intensities = ()
         self.__quadrant_variance = 0
         self.__brightest_quadrants = []
-        self.__stepper_controller = StepperController(is_rpi = True)
+        self.__stepper_controller = stepper_controller
 
         # Coefficient for sensitivity modification
-        self.std_dev_coefficient = std_dev_coefficient
+        self.__std_dev_coefficient = std_dev_coefficient
 
         # Coefficient for movement cutoff
-        self.movement_cutoff = movement_cutoff
+        self.__movement_cutoff = movement_cutoff
 
         # Assume tuple index corresponds to quadrant number plus 1:
         # ([0], [1], [2], [3])
@@ -95,7 +96,7 @@ class QuadCellDecoder:
         #         the maximum value)
         std_dev = sqrt(self.__quadrant_variance)
 
-        if std_dev/max_intensity < self.movement_cutoff:
+        if std_dev/max_intensity < self.__movement_cutoff:
 
             # if standard deviation is not high, assume no movement is needed
             self.__brightest_quadrants = [True, True, True, True]
@@ -105,7 +106,7 @@ class QuadCellDecoder:
             # Step 3) Find any other intensity values that are
             #         within one standard deviation of the
             #         brightest value.
-            threshold = max_intensity - (self.std_dev_coefficient*std_dev)
+            threshold = max_intensity - (self.__std_dev_coefficient*std_dev)
             self.__brightest_quadrants = [True if val >= threshold else False for val in self.__quadrant_intensities]
 
     def decode_brightness_into_direction(self):
@@ -125,33 +126,33 @@ class QuadCellDecoder:
         if stepper_code == 0b0000:
             self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.STOP)
         elif stepper_code == 0b0001:
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT_TILT_DOWN)
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
         elif stepper_code == 0b0010:
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT_TILT_DOWN)
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
         elif stepper_code == 0b0011:
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.TILT_DOWN)
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.STOP)
         elif stepper_code == 0b0100:
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT_TILT_UP)
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
         elif stepper_code == 0b0101:
             self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.STOP)
         elif stepper_code == 0b0110:
             self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
         elif stepper_code == 0b0111:
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT_TILT_DOWN)
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
         elif stepper_code == 0b1000:
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT_TILT_UP)
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
         elif stepper_code == 0b1001:
             self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
         elif stepper_code == 0b1010:
             self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.STOP)
         elif stepper_code == 0b1011:
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT_TILT_DOWN)
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
         elif stepper_code == 0b1100:
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.TILT_UP)
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.STOP)
         elif stepper_code == 0b1101:
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT_TILT_UP)
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
         elif stepper_code == 0b1110:
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT_TILT_UP)
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
         elif stepper_code == 0b1111:
             self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.STOP)
 

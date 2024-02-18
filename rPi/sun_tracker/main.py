@@ -4,10 +4,18 @@ import socket
 import pickle
 from util.camera_processor import CameraProcessor
 from util.quad_cell_decoder import QuadCellDecoder
+from util.solar_sensor_decoder import SolarSensorDecoder
+from util.stepper_controller import StepperController
 from util.streaming import StreamingOutput, StreamingHandler, StreamingServer
 from picamera2 import Picamera2
 import argparse
 import sys
+
+def process_current_adc_data(ssCon, adc_vals):
+
+    # trigger_quad_cell =  ssCon.decode_brightness_into_action(adc_vals)
+    # return trigger_quad_cell
+    pass
 
 
 def process_current_frame(qcDec, brightness_vals):
@@ -16,7 +24,6 @@ def process_current_frame(qcDec, brightness_vals):
     qcDec.compute_quadrant_variance()
     qcDec.locate_brightest_quadrants()
     qcDec.decode_brightness_into_direction()
-    qcDec.get_stepper_controller().move_steppers()
 
 def socket_init(ip):
 
@@ -66,11 +73,17 @@ def main(args):
     frame_count = 0
     samples_per_second = 24
 
+    # Create StepperController object
+    sCon = StepperController()
+
     # Create CameraProcessor object and pass in size of frame
     cProc = CameraProcessor(size)
 
+    # Create SolarSensorDecoder object to process ADC values
+    ssCon = SolarSensorDecoder(0, False, sCon)
+
     # Create a QuadCellDecoder object to process the input frame
-    qcDec = QuadCellDecoder()
+    qcDec = QuadCellDecoder(sCon)
 
     # loop runs if capturing has been initialized. 
     while(True):
@@ -97,45 +110,54 @@ def main(args):
         
         # Executes brightness evaluation at specified sampling rate
         if(frame_count == (fps//samples_per_second)):
+
+            # reset frame count
             frame_count = 0
-            cProc.set_frame(frame)
-            cProc.convert_frame()
-            cProc.split_frame()
-            (q0,q1,q2,q3) = cProc.get_quadrants()
 
-            # Display Quadrant HSV if QUAD is True
-            if QUAD is True:
-                cv2.imshow('q0', q0)
-                cv2.imshow('q1', q1)
-                cv2.imshow('q2', q2)
-                cv2.imshow('q3', q3)
-        
-            # Getting double of avg brightness for each quadrant
-            v0, v1, v2, v3 = cProc.compute_brightness()
+            # we only perform quad-cell algorithm if camera diode is aligned with (or away from) sun
+            if (process_current_adc_data(sCon, ssCon, (0,0,0,0))):
+                cProc.set_frame(frame)
+                cProc.convert_frame()
+                cProc.split_frame()
+                (q0,q1,q2,q3) = cProc.get_quadrants()
 
-            # Process current frame
-            process_current_frame(qcDec, (v0, v1, v2, v3))
+                # Display Quadrant HSV if QUAD is True
+                if QUAD is True:
+                    cv2.imshow('q0', q0)
+                    cv2.imshow('q1', q1)
+                    cv2.imshow('q2', q2)
+                    cv2.imshow('q3', q3)
+            
+                # Getting double of avg brightness for each quadrant
+                v0, v1, v2, v3 = cProc.compute_brightness()
 
-            # Showcases brightest quadrant(s) if QUAD is True
-            if QUAD is True:
+                # Process current frame
+                process_current_frame(qcDec, (v0, v1, v2, v3))
 
-                # Getting results of brightness computation
-                q0_is_bright, q1_is_bright, q2_is_bright, q3_is_bright = qcDec.get_brightest_quadrants()
-                
-                # Converting quadrants based on brightness results
-                if q0_is_bright is True:
-                    q0 = cv2.cvtColor(q0, cv2.COLOR_HSV2RGB)       
-                if q1_is_bright is True:
-                    q1 = cv2.cvtColor(q1, cv2.COLOR_HSV2RGB)
-                if q2_is_bright is True:
-                    q2 = cv2.cvtColor(q2, cv2.COLOR_HSV2RGB)
-                if q3_is_bright is True:
-                    q3 = cv2.cvtColor(q3, cv2.COLOR_HSV2RGB)
-                
-                # Example of recombining frame
-                new_frame = cProc.recombine(q0, q1, q2, q3)
 
-                cv2.imshow("New Frame", new_frame)
+                # Showcases brightest quadrant(s) if QUAD is True
+                if QUAD is True:
+
+                    # Getting results of brightness computation
+                    q0_is_bright, q1_is_bright, q2_is_bright, q3_is_bright = qcDec.get_brightest_quadrants()
+                    
+                    # Converting quadrants based on brightness results
+                    if q0_is_bright is True:
+                        q0 = cv2.cvtColor(q0, cv2.COLOR_HSV2RGB)       
+                    if q1_is_bright is True:
+                        q1 = cv2.cvtColor(q1, cv2.COLOR_HSV2RGB)
+                    if q2_is_bright is True:
+                        q2 = cv2.cvtColor(q2, cv2.COLOR_HSV2RGB)
+                    if q3_is_bright is True:
+                        q3 = cv2.cvtColor(q3, cv2.COLOR_HSV2RGB)
+                    
+                    # Example of recombining frame
+                    new_frame = cProc.recombine(q0, q1, q2, q3)
+
+                    cv2.imshow("New Frame", new_frame)
+            
+            # move steppers
+            sCon.move_steppers()
 
     
         # Wait for 'a' key to stop the program 
