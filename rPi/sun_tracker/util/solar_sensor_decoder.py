@@ -6,6 +6,8 @@
 #
 
 # imports
+from .stepper_controller import STEPPER_DIRECTION
+from .stepper_controller import StepperController
 
 class SolarSensorDecoder:
     """ The SolarSensorDecoder class.
@@ -18,11 +20,20 @@ class SolarSensorDecoder:
         """Constructor
 
         Args:
-            aligned_quadrant (int) : the diode/quadrant that must be either brightest or darkest
+            aligned_quadrant (int) : the diode/quadrant that must be brightest
+            dark_quadrant (int) : The diode/quadrant that must be darkest
             dark_flag (bool) : if set, the "aligned_quadrant" will be aimed away from the sun
             stepper_controller : reference to the singleton StepperController instance
+            adc_max (int) : max value possible to be output by ADC
+            adc_thresh (int) : threshold value used to determine whether we should switch to dark control
         """
-        pass
+        self.__aligned_quadrant = 0
+        self.__dark_quadrant = 2
+        self.__dark_flag = False
+        self.__stepper_control = stepper_controller
+        self.__adc_max = 1023
+        self.__adc_thresh = int(self.__adc_max * 0.98)
+        
 
     def decode_brightness_into_action(self, input_adc_values):
         """ Input intensity/brightness levels for each quadrant.
