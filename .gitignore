@@ -7,3 +7,4 @@ ppt_img_pipeline/
 __pycache__/
 *.py[cod]
 *$py.class
+/GoProTutorials
