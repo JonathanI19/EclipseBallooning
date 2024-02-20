@@ -13,8 +13,13 @@ import sys
 
 def process_current_adc_data(ssCon, adc_vals):
 
-    # trigger_quad_cell =  ssCon.decode_brightness_into_action(adc_vals)
-    # return trigger_quad_cell
+    # Check if multiple diodes > adc_thresh
+        # If yes, call quad_cell_trigger(dark_quadrant, adc_vals)
+        # If no, call quad_cell_trigger(aligned_quadrant, adc_vals)
+            # If quad_cell_trigger returns true, return true again and exit function
+            # If not true, Call either decode_brightness_into_action() or decode_darkness_into_action()
+                # Return False
+
     pass
 
 
