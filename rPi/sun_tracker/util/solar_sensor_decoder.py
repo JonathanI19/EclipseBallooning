@@ -25,24 +25,67 @@ class SolarSensorDecoder:
             dark_flag (bool) : if set, the "aligned_quadrant" will be aimed away from the sun
             stepper_controller : reference to the singleton StepperController instance
             adc_max (int) : max value possible to be output by ADC
-            adc_thresh (int) : threshold value used to determine whether we should switch to dark control
         """
+
         self.__aligned_quadrant = 0
         self.__dark_quadrant = 2
         self.__dark_flag = False
         self.__stepper_control = stepper_controller
         self.__adc_max = 1023
-        self.__adc_thresh = int(self.__adc_max * 0.98)
         
 
     def decode_brightness_into_action(self, input_adc_values):
-        """ Input intensity/brightness levels for each quadrant.
+        """Determine movement by evaluating brightest quadrants
 
-        @param input_adc_values    ADC values corresponding to sensor analog voltages
+        Args:
+            input_adc_values tuple(int): ADC values corresponding to sensor analog voltages
 
-        @return    bool
+        Returns:
+            bool: True if aligned_quadrant matches brightest; False if not
         """
-        return True
+
+        '''
+        ORGANIZING THOUGHTS
+        ----------------------------------
+
+        
+
+        Q3    |      Q0 *Aligned
+              |
+        ------|--------
+              |
+        Q2    |      Q1
+
+
+        Cases:
+            Single Quadrant above bright thresh:
+                Q0: Return True
+                Q1: Pan Left
+                Q2: Pan to brightest of Q1 or Q3
+                Q3: Pan Right
+
+            Two Quadrants above bright thresh:
+                Q0/Q1: 
+                Q0/Q2: 
+                Q0/Q3: 
+                Q1/Q2: 
+                Q1/Q3: 
+                Q2/Q3: 
+        '''
+        pass
+    
+    def decode_darkness_into_action(self, input_adc_values):
+        """Determine movement by evaluating darkest quadrants
+
+        Args:
+            input_adc_values tuple(int): ADC values corresponding to sensor analog voltages
+
+        Returns:
+            bool: True if aligned_quadrant matches brightest; False if not
+        """     
+
+        pass
+
     
     def get_stepper_controller(self):
         """ Gets __stepper_controller member variable.
