@@ -11,9 +11,28 @@ from picamera2 import Picamera2
 import argparse
 import sys
 
-def process_current_adc_data(ssCon, adc_vals):
+def process_current_adc_data(ssDec, adc_vals):
 
-    # Check if multiple diodes > adc_thresh
+    # Calculate max val and theshold based off of max val
+    max_val = max(adc_vals)
+    max_thresh = int(max_val*0.98)
+    thresh_count = 0
+
+    # Get number of quadrants above max threshold
+    for item in adc_vals:
+        if item > max_thresh:
+            thresh_count += 1
+    
+    # Use darkest quadrant to calculate movement if thresh_count > 2
+    if thresh_count > 2:
+        return ssDec.decode_darkness_into_action(adc_vals)
+
+    # Otherwise use brightest quadrant
+    else:
+        return ssDec.decode_brightness_into_action(adc_vals)
+
+
+    # Check if multiple diodes > (max_adc * adc_thresh)
         # If yes, call quad_cell_trigger(dark_quadrant, adc_vals)
         # If no, call quad_cell_trigger(aligned_quadrant, adc_vals)
             # If quad_cell_trigger returns true, return true again and exit function
@@ -85,7 +104,7 @@ def main(args):
     cProc = CameraProcessor(size)
 
     # Create SolarSensorDecoder object to process ADC values
-    ssCon = SolarSensorDecoder(0, False, sCon)
+    ssDec = SolarSensorDecoder(0, False, sCon)
 
     # Create a QuadCellDecoder object to process the input frame
     qcDec = QuadCellDecoder(sCon)
@@ -120,7 +139,7 @@ def main(args):
             frame_count = 0
 
             # we only perform quad-cell algorithm if camera diode is aligned with (or away from) sun
-            if (process_current_adc_data(sCon, ssCon, (0,0,0,0))):
+            if (process_current_adc_data(sCon, ssDec, (0,0,0,0))):
                 cProc.set_frame(frame)
                 cProc.convert_frame()
                 cProc.split_frame()
