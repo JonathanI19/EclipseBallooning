@@ -18,18 +18,39 @@ def process_current_adc_data(ssDec, adc_vals):
     max_thresh = int(max_val*0.98)
     thresh_count = 0
 
+    # isDark and isBright lists
+    isDark = [None] * 4
+    isBright = [None] * 4
+
     # Get number of quadrants above max threshold
-    for item in adc_vals:
-        if item > max_thresh:
+    # Also store bool values of isBright list
+    for i in range(len(adc_vals)):
+        if adc_vals[i] > max_thresh:
             thresh_count += 1
+            isBright[i] = True
+        else:
+            isBright[i] = False
+            
     
     # Use darkest quadrant to calculate movement if thresh_count > 2
     if thresh_count > 2:
-        return ssDec.decode_darkness_into_action(adc_vals)
+        
+        # Calcualte min val and threshold based off of min val
+        min_val = min(adc_vals)
+        min_thresh = int(min_val*1.02)
+        
+        # Store bool values of isDark list
+        for i in range(len(adc_vals)):
+            if adc_vals[i] < min_thresh:
+                isDark[i] = True
+            else:
+                isDark[i] = False
+                
+        return ssDec.decode_darkness_into_action(adc_vals, isDark)
 
     # Otherwise use brightest quadrant
     else:
-        return ssDec.decode_brightness_into_action(adc_vals)
+        return ssDec.decode_brightness_into_action(adc_vals, isBright)
 
 
     # Check if multiple diodes > (max_adc * adc_thresh)
