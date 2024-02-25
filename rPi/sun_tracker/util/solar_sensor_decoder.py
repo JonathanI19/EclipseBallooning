@@ -65,12 +65,12 @@ class SolarSensorDecoder:
                 Q3: Pan Right
 
             Two Quadrants above bright thresh:
-                Q0/Q1: 
-                Q0/Q2: 
-                Q0/Q3: 
-                Q1/Q2: 
-                Q1/Q3: 
-                Q2/Q3: 
+                Q0/Q1: Return True if Q0 Brightest; Else Pan Left
+                Q0/Q2: Return True if Q0 Brightest; Else, rotate through brightest remaining
+                Q0/Q3: Return True if Q0 Brightest; Else Pan Right
+                Q1/Q2: Pan Left
+                Q1/Q3: Pan right or left based on brightest
+                Q2/Q3: Pan Right
         '''
         pass
     
@@ -82,10 +82,48 @@ class SolarSensorDecoder:
 
         Returns:
             bool: True if aligned_quadrant matches brightest; False if not
-        """     
+        """  
+        
+        '''
+        ORGANIZING THOUGHTS
+        ----------------------------------
+
+        
+
+        Q3          |      Q0 
+                    |
+              ------|--------
+                    |
+        Q2 *Dark    |      Q1
+
+
+        Cases:
+            Single Quadrant above bright thresh:
+                Q0: Pan to brightest of Q1 or Q3
+                Q1: Pan Right
+                Q2: Return True
+                Q3: Pan Left
+
+            Two Quadrants above bright thresh:
+                Q0/Q1: Pan Right
+                Q0/Q2: If Q2 darkest, Return True; Else, rotate through darkest remaining
+                Q0/Q3: Pan Left
+                Q1/Q2: Return True if Q2 Darkest; Else pan right
+                Q1/Q3: Pan right or left based on darkest
+                Q2/Q3: Return True if Q2 Darkest; Else Pan Left
+        '''   
 
         pass
 
+    def __find_rotation(input_adc_values, isBright):
+        """Finds brightest or darkest of input values, and determines rotation quadrant
+
+        Args:
+            input_adc_values tuple(int): ADC values corresponding to sensor analog voltages
+            isBright (bool): _description_
+        """        
+        
+    
     
     def get_stepper_controller(self):
         """ Gets __stepper_controller member variable.
