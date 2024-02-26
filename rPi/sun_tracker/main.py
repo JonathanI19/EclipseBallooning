@@ -10,6 +10,7 @@ from util.streaming import StreamingOutput, StreamingHandler, StreamingServer
 from picamera2 import Picamera2
 import argparse
 import sys
+import serial
 
 def process_current_adc_data(ssDec, adc_vals):
 
@@ -79,6 +80,10 @@ def main(args):
     STREAM = bool(args.stream)
     QUAD = bool(args.quad)
     GS_IP = args.ip
+
+
+    # Set up serial with 1 second timeout
+    ser = serial.Serial('/dev/ttyACM0', 9600, timeout = 1)
     
     if DISPLAY is True:
         # Start window thread
@@ -151,8 +156,24 @@ def main(args):
             # reset frame count
             frame_count = 0
 
+            # Reset input buffer to only get latest result
+            ser.reset_input_buffer()
+            
+            line = ser.readline()
+
+            # Remove newline
+            line = ser.strip()
+
+            # May need to decode string
+            # line = line.decode("utf-8")
+
+            # Use comma delimiter
+            line.split(',')
+
+            adc_input_vals = [int(i) for i in line]
+
             # we only perform quad-cell algorithm if camera diode is aligned with (or away from) sun
-            if (process_current_adc_data(sCon, ssDec, (0,0,0,0))):
+            if (process_current_adc_data(sCon, ssDec, adc_input_vals)):
                 cProc.set_frame(frame)
                 cProc.convert_frame()
                 cProc.split_frame()

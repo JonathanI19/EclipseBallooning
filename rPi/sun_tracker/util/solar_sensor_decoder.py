@@ -38,7 +38,7 @@ class SolarSensorDecoder:
         """Determine movement by evaluating brightest quadrants
 
         Args:
-            input_adc_values tuple(int): ADC values corresponding to sensor analog voltages
+            input_adc_values list(int): ADC values corresponding to sensor analog voltages
             isBright list(bool): Separated by quadrant; True if above brightness threshold, otherwise false
 
         Returns:
@@ -171,7 +171,7 @@ class SolarSensorDecoder:
         """Determine movement by evaluating darkest quadrants
 
         Args:
-            input_adc_values tuple(int): ADC values corresponding to sensor analog voltages
+            input_adc_values list(int): ADC values corresponding to sensor analog voltages
             isDark list(bool): Separated by quadrant; True if below darkness threshold, otherwise false
 
         Returns:
