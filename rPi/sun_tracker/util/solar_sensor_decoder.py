@@ -30,15 +30,16 @@ class SolarSensorDecoder:
         self.__aligned_quadrant = 0
         self.__dark_quadrant = 2
         self.__dark_flag = False
-        self.__stepper_control = stepper_controller
+        self.__stepper_controller = stepper_controller
         self.__adc_max = 1023
         
 
-    def decode_brightness_into_action(self, input_adc_values):
+    def decode_brightness_into_action(self, input_adc_values, isBright):
         """Determine movement by evaluating brightest quadrants
 
         Args:
             input_adc_values tuple(int): ADC values corresponding to sensor analog voltages
+            isBright list(bool): Separated by quadrant; True if above brightness threshold, otherwise false
 
         Returns:
             bool: True if aligned_quadrant matches brightest; False if not
@@ -72,13 +73,106 @@ class SolarSensorDecoder:
                 Q1/Q3: Pan right or left based on brightest
                 Q2/Q3: Pan Right
         '''
-        pass
+        
+        # self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
+        # self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.STOP)
+        # self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
+
+        
+        # Q0: Return True
+        if (isBright == [True, False, False, False]):
+            return True
+        
+        # Q1: Pan Left; Return False
+        elif (isBright == [False, True, False, False]):
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
+            return False
+            
+        # Q2: Pan to brightest of Q1 or Q3
+        elif (isBright == [False, False, True, False]):
+            if (input_adc_values[1] > input_adc_values[3]):
+                self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
+            elif (input_adc_values[3] > input_adc_values[1]):
+                self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
+                
+                
+            ########################## IMPORTANT ##########################
+            # Backup in case Q1 and Q3 are equal; Pan in direction; Potential for error here
+            else:
+                self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
+                
+            return False
+        
+        # Q3: Pan Right
+        elif (isBright == [False, False, False, True]):
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
+            return False
+        
+        # Q0/Q1: Return True if Q0 Brightest; Else Pan Left
+        elif (isBright == [True, True, False, False]):
+            if (input_adc_values[0] > input_adc_values[1]):
+                return True
+            else:
+                self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
+                return False
+        
+        # Q0/Q2: Return True if Q0 Brightest; Else, rotate through brightest remaining
+        elif (isBright == [True, False, True, False]):
+            if (input_adc_values[0] > input_adc_values[2]):
+                return True
+            
+            else:
+                if (input_adc_values[1] > input_adc_values[3]):
+                    self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
+                elif (input_adc_values[3] > input_adc_values[1]):
+                    self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
+               
+                ########################## IMPORTANT ##########################
+                # Backup in case Q1 and Q3 are equal; Pan in direction; Potential for error here
+                else:
+                    self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
+                    
+                return False
+        
+        # Q0/Q3: Return True if Q0 Brightest; Else Pan Right
+        elif (isBright == [True, False, False, True]):
+            if (input_adc_values[0] > input_adc_values[3]):
+                return True
+            else:
+                self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
+                return False
+            
+        # Q1/Q2: Pan Left
+        elif (isBright == [False, True, True, False]):
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
+            return False
+        
+        # Q1/Q3: Pan right or left based on brightest
+        elif (isBright == [False, True, False, True]):
+            if (input_adc_values[1] > input_adc_values[3]):
+                    self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
+            elif (input_adc_values[3] > input_adc_values[1]):
+                self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
+               
+            ########################## IMPORTANT ##########################
+            # Backup in case Q1 and Q3 are equal; Pan in direction; Potential for error here
+            else:
+                self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
+                
+            return False
+        
+        # Q2/Q3: Pan Right
+        elif (isBright == [False, False, True, True]):
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
+            return False
+        
     
-    def decode_darkness_into_action(self, input_adc_values):
+    def decode_darkness_into_action(self, input_adc_values, isDark):
         """Determine movement by evaluating darkest quadrants
 
         Args:
             input_adc_values tuple(int): ADC values corresponding to sensor analog voltages
+            isDark list(bool): Separated by quadrant; True if below darkness threshold, otherwise false
 
         Returns:
             bool: True if aligned_quadrant matches brightest; False if not
