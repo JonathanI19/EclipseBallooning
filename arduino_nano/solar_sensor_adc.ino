@@ -7,7 +7,8 @@
 */
 
 //INCLUDES
-//
+#include <stdio.h>
+
 // internal buffer size
 #define MEM 10
 
@@ -115,9 +116,10 @@ class CircularBuffer {
 // GLOBAL VARIABLES
 unsigned int analog_pins[4] = {Q1_IN, Q2_IN, Q3_IN, Q4_IN};
 unsigned int led_pins   [4] = {Q1_OU, Q2_OU, Q3_OU, Q4_OU};
-char         *headers   [4] = {"Q1: ", "Q2: ", "Q3: ", "Q4: "};
+//char         *headers   [4] = {"Q1: ", "Q2: ", "Q3: ", "Q4: "};
 unsigned int q_vals     [4] = {0, 0, 0, 0};
 unsigned int global_max     = 1;
+char adc_vals_str[20];
 
 CircularBuffer filter(MEM);
 
@@ -194,8 +196,11 @@ void loop() {
   }
 
   // ship ADC values via serial
-  for (int i = 0; i < 4; i++) {
-    Serial.print(headers[i]);
-    Serial.println(q_vals[i]);
-  }
+  sprintf(adc_vals_str, "%d,%d,%d,%d", q_vals[0], q_vals[1], q_vals[2], q_vals[3]);
+  Serial.println(adc_vals_str);
+  
+  // for (int i = 0; i < 4; i++) {
+  //   Serial.print(headers[i]);
+  //   Serial.println(q_vals[i]);
+  // }
 }
