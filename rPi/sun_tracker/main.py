@@ -83,7 +83,7 @@ def main(args):
 
 
     # Set up serial with 1 second timeout
-    ser = serial.Serial('/dev/ttyACM0', 9600, timeout = 1)
+    ser = serial.Serial('/dev/ttyUSB0', 9600, timeout = 1)
     
     if DISPLAY is True:
         # Start window thread
@@ -140,6 +140,8 @@ def main(args):
         # output the frame
         out.write(frame) 
         
+        ser.reset_input_buffer()
+        
         if DISPLAY is True:
             # The original input frame is shown in the window 
             cv2.imshow('Original', frame)
@@ -157,23 +159,41 @@ def main(args):
             frame_count = 0
 
             # Reset input buffer to only get latest result
-            ser.reset_input_buffer()
+            # ser.reset_input_buffer()
             
             line = ser.readline()
 
             # Remove newline
-            line = ser.strip()
+            line = line.strip()
 
             # May need to decode string
-            # line = line.decode("utf-8")
-
+            line = line.decode("utf-8")
+            
+            
+            
             # Use comma delimiter
-            line.split(',')
-
-            adc_input_vals = [int(i) for i in line]
-
+            line = line.split(',')
+            
+            ready = False
+            while len(line)<4 or not ready:
+                line = ser.readline()
+                line = line.strip()
+                line = line.decode("utf-8")
+                line = line.split(',')
+                try:
+                    if int(line[0]) > 92:
+                        ready = True
+                except:
+                    pass
+                
+            
+            try:
+                adc_input_vals = [int(i) for i in line]
+                print(adc_input_vals)
+            except:
+                pass
             # we only perform quad-cell algorithm if camera diode is aligned with (or away from) sun
-            if (process_current_adc_data(sCon, ssDec, adc_input_vals)):
+            if (process_current_adc_data(ssDec, adc_input_vals)):
                 cProc.set_frame(frame)
                 cProc.convert_frame()
                 cProc.split_frame()
@@ -215,6 +235,7 @@ def main(args):
                     cv2.imshow("New Frame", new_frame)
             
             # move steppers
+            print(sCon.view_movement_queue())
             sCon.move_steppers()
 
     

@@ -150,7 +150,7 @@ class SolarSensorDecoder:
         # Q1/Q3: Pan right or left based on brightest
         elif (isBright == [False, True, False, True]):
             if (input_adc_values[1] > input_adc_values[3]):
-                    self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
+                self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
             elif (input_adc_values[3] > input_adc_values[1]):
                 self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
                
@@ -206,7 +206,9 @@ class SolarSensorDecoder:
                 Q1/Q3: Pan right or left based on darkest
                 Q2/Q3: Return True if Q2 Darkest; Else Pan Left
         '''   
-
+        
+        print("DARK MODE ENGAGED. PREPARE YOUR ANUS")
+        
         # Q0: Pan to darkest of Q1 or Q3
         if (isDark == [True, False, False, False]):
             if (input_adc_values[1] < input_adc_values[3]):
@@ -293,7 +295,11 @@ class SolarSensorDecoder:
             else:
                 self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
                 return False
-    
+        
+        # If no other condtions met, switch to camera tracking
+        else:
+            return True
+        
     def get_stepper_controller(self):
         """ Gets __stepper_controller member variable.
 
