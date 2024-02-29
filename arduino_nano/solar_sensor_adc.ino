@@ -1,4 +1,4 @@
-/* @ file: solar_sensor_adc
+/* @ file: solar_sensor_adc.ino
 
    @ brief: Reads four analog voltage signals and
             performs some initial processing to
