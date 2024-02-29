@@ -212,9 +212,9 @@ class SolarSensorDecoder:
         # Q0: Pan Left if Q1 < Q3; Pan Right if Q3 < Q1
         if (isDark == [True, False, False, False]):
             if (input_adc_values[1] < input_adc_values[3]):
-                self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
-            elif (input_adc_values[3] < input_adc_values[1]):
                 self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
+            elif (input_adc_values[3] < input_adc_values[1]):
+                self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
             
             ########################## IMPORTANT ##########################
             # Backup in case Q1 and Q3 are equal; Pan in direction; Potential for error here
@@ -226,7 +226,7 @@ class SolarSensorDecoder:
 
         # Q1: Pan Left
         elif (isDark == [False, True, False, False]):
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
             return False
 
         # Q2: Return True
@@ -235,12 +235,12 @@ class SolarSensorDecoder:
         
         # Q3: Pan Right
         elif (isDark == [False, False, False, True]):
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
             return False
         
         # Q0/Q1: Pan Left
         elif (isDark == [True, True, False, False]):
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
             return False
         
         # QQ0/Q2: If Q2 darkest, Return True; Else, Pan Left if Q1 < Q3; Pan Right if Q3 < Q1
@@ -249,9 +249,9 @@ class SolarSensorDecoder:
                 return True
             else:
                 if (input_adc_values[1] < input_adc_values[3]):
-                    self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
-                elif (input_adc_values[3] < input_adc_values[1]):
                     self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
+                elif (input_adc_values[3] < input_adc_values[1]):
+                    self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
                 
                 ########################## IMPORTANT ##########################
                 # Backup in case Q1 and Q3 are equal; Pan in direction; Potential for error here
@@ -263,7 +263,7 @@ class SolarSensorDecoder:
         
         # Q0/Q3: Pan Right
         elif (isDark == [True, False, False, True]):
-            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
+            self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
             return False
         
         # Q1/Q2: Return True if Q2 Darkest; Else pan Left
@@ -271,15 +271,15 @@ class SolarSensorDecoder:
             if (input_adc_values[2] < input_adc_values[1]):
                 return True
             else:
-                self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
+                self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
                 return False
         
         # Q1/Q3: Pan Left if Q1 < Q3; Pan Right if Q3 < Q1
         elif (isDark == [False, True, False, True]):
             if (input_adc_values[1] < input_adc_values[3]):
-                self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
-            elif (input_adc_values[3] < input_adc_values[1]):
                 self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
+            elif (input_adc_values[3] < input_adc_values[1]):
+                self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
                 
             ########################## IMPORTANT ##########################
             # Backup in case Q1 and Q3 are equal; Pan in direction; Potential for error here
@@ -293,7 +293,7 @@ class SolarSensorDecoder:
             if (input_adc_values[2] < input_adc_values[3]):
                 return True
             else:
-                self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)
+                self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
                 return False
         
         # If no other condtions met, switch to camera tracking
