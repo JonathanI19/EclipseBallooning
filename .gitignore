@@ -1,3 +1,10 @@
 *.mp4
 .venv
 .venv/
+venv/
+ppt_img_pipeline/
+.vscode/**
+__pycache__/
+*.py[cod]
+*$py.class
+/GoProTutorials

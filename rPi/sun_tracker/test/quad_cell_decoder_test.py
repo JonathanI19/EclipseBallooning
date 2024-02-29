@@ -5,8 +5,15 @@
 
 # imports
 import pytest
-from quad_cell_decoder import QuadCellDecoder
-from stepper_controller import STEPPER_DIRECTION
+from util.quad_cell_decoder import QuadCellDecoder
+from util.stepper_controller import StepperController
+from util.stepper_controller import STEPPER_DIRECTION
+
+@pytest.fixture
+def setup():
+    stepper_controller = StepperController()
+    yield stepper_controller
+    stepper_controller.cleanup()
 
 class TestQuadCellDecoder:
     """ Test class for QuadCellDecoder.
@@ -14,14 +21,14 @@ class TestQuadCellDecoder:
     Unit testing for QuadCellDecoder.
     """
 
-    def test_set_intensity_values_nominal(self):
+    def test_set_intensity_values_nominal(self, setup):
         """ Verify normal functionality of set_intensity_values.
 
         @return    None
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder()
+        quad_cell_decoder_UUT = QuadCellDecoder(setup)
 
         # create test input
         test_intensities = (102, 405, 34, 8)
@@ -34,7 +41,7 @@ class TestQuadCellDecoder:
         for i in range(0, 3):
             assert test_output[i] == test_intensities[i]
 
-    def test_set_intensity_values_wrong_type(self):
+    def test_set_intensity_values_wrong_type(self, setup):
         """ Verify exception raised when wrong type provided.
 
         @return    None
@@ -44,7 +51,7 @@ class TestQuadCellDecoder:
         with pytest.raises(Exception) as e:
 
             # instantiate the UUT
-            quad_cell_decoder_UUT = QuadCellDecoder()
+            quad_cell_decoder_UUT = QuadCellDecoder(setup)
 
             # create the test input (list instead of tuple)
             test_intensities = [102, 405, 34, 8]
@@ -55,7 +62,7 @@ class TestQuadCellDecoder:
         # check exception message
         assert str(e.value) == "[ERROR] Invalid type <class 'list'> provided."
 
-    def test_set_intensity_values_wrong_size(self):
+    def test_set_intensity_values_wrong_size(self, setup):
         """ Verify exception raised when wrong sized tuple provided.
 
         @return    None
@@ -65,7 +72,7 @@ class TestQuadCellDecoder:
         with pytest.raises(Exception) as e:
 
             # instantiate the UUT
-            quad_cell_decoder_UUT = QuadCellDecoder()
+            quad_cell_decoder_UUT = QuadCellDecoder(setup)
 
             # create the test input (too large)
             test_intensities = (102, 405, 34, 8, 5)
@@ -76,7 +83,7 @@ class TestQuadCellDecoder:
         # check exception message
         assert str(e.value) == "[ERROR] Invalid tuple of size 5 provided."
 
-    def test_compute_quadrant_variance_pos(self):
+    def test_compute_quadrant_variance_pos(self, setup):
         """ Verify variance calculation on positive numbers
         performed by compute_quadrant_variance.
 
@@ -84,7 +91,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder()
+        quad_cell_decoder_UUT = QuadCellDecoder(setup)
 
         # create test input
         test_intensities = (102, 405, 34, 8)
@@ -96,7 +103,7 @@ class TestQuadCellDecoder:
         # verify output
         assert round(quad_cell_decoder_UUT.get_quadrant_variance(), 5) == 33432.91667
     
-    def test_compute_quadrant_variance_neg(self):
+    def test_compute_quadrant_variance_neg(self, setup):
         """ Verify variance calculation on positive or
         negative numbers performed by compute_quadrant_variance.
 
@@ -104,7 +111,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder()
+        quad_cell_decoder_UUT = QuadCellDecoder(setup)
 
         # create test input
         test_intensities = (65, -405, -123455, 554321)
@@ -116,7 +123,7 @@ class TestQuadCellDecoder:
         # verify output
         assert round(quad_cell_decoder_UUT.get_quadrant_variance(), 4) == 92058305715.6667
 
-    def test_locate_brightest_quadrant_0(self):
+    def test_locate_brightest_quadrant_0(self, setup):
         """ Verify that locate_brightest_quadrant produces
         the correct boolean tuple (test case 0).
 
@@ -124,7 +131,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder()
+        quad_cell_decoder_UUT = QuadCellDecoder(setup)
 
         # create test input
         # - note that the brightest quadrant is Q2 with intensity 405
@@ -144,7 +151,7 @@ class TestQuadCellDecoder:
         for i in range(0, 3):
             assert test_output[i] == golden_output[i]
         
-    def test_locate_brightest_quadrant_1(self):
+    def test_locate_brightest_quadrant_1(self, setup):
         """ Verify that locate_brightest_quadrant produces
         the correct boolean tuple (test case 1).
 
@@ -152,7 +159,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder()
+        quad_cell_decoder_UUT = QuadCellDecoder(setup)
 
         # create test input
         # - note that the brightest quadrant is Q4 with intensity 1000
@@ -172,7 +179,7 @@ class TestQuadCellDecoder:
         for i in range(0, 3):
             assert test_output[i] == golden_output[i]
 
-    def test_locate_brightest_quadrant_2(self):
+    def test_locate_brightest_quadrant_2(self, setup):
         """ Verify that locate_brightest_quadrant produces
         the correct boolean tuple (test case 2).
 
@@ -180,7 +187,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder()
+        quad_cell_decoder_UUT = QuadCellDecoder(setup)
 
         # create test input
         # - the standard deviation of this data is 4594.056
@@ -198,7 +205,33 @@ class TestQuadCellDecoder:
         for i in range(0, 3):
             assert test_output[i] == golden_output[i]
 
-    def test_decode_brightness_into_direction_0001(self):
+    def test_decode_brightness_into_direction_0000(self, setup):
+        """ Verify that decode_brightness_into_direction
+        properly decodes input (test case: 0000)
+
+        @return    None
+        """
+
+        # instantiate the UUT
+        quad_cell_decoder_UUT = QuadCellDecoder(setup)
+
+        # create test input
+        test_intensities = (124, 123, 120, 126)
+
+        # call the function under test
+        quad_cell_decoder_UUT.set_intensity_values(test_intensities)
+        quad_cell_decoder_UUT.compute_quadrant_variance()
+        quad_cell_decoder_UUT.locate_brightest_quadrants()
+        quad_cell_decoder_UUT.decode_brightness_into_direction()
+
+        # verify output
+        golden_output = [STEPPER_DIRECTION.STOP]
+        test_output = quad_cell_decoder_UUT.get_stepper_controller().view_movement_queue()
+        assert len(test_output) == len(golden_output)
+        for i in range(0, len(test_output)):
+            assert test_output[i] == golden_output[i]
+
+    def test_decode_brightness_into_direction_0001(self, setup):
         """ Verify that decode_brightness_into_direction
         properly decodes input (test case: 0001)
 
@@ -206,7 +239,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder()
+        quad_cell_decoder_UUT = QuadCellDecoder(setup)
 
         # create test input
         test_intensities = (36788, 456, 12358, 129299)
@@ -218,13 +251,13 @@ class TestQuadCellDecoder:
         quad_cell_decoder_UUT.decode_brightness_into_direction()
 
         # verify output
-        golden_output = [STEPPER_DIRECTION.PAN_RIGHT_TILT_DOWN]
+        golden_output = [STEPPER_DIRECTION.PAN_RIGHT]
         test_output = quad_cell_decoder_UUT.get_stepper_controller().view_movement_queue()
         assert len(test_output) == len(golden_output)
         for i in range(0, len(test_output)):
             assert test_output[i] == golden_output[i]
 
-    def test_decode_brightness_into_direction_0010(self):
+    def test_decode_brightness_into_direction_0010(self, setup):
         """ Verify that decode_brightness_into_direction
         properly decodes input (test case: 0010)
 
@@ -232,7 +265,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder()
+        quad_cell_decoder_UUT = QuadCellDecoder(setup)
 
         # create test input
         test_intensities = (36788, 456, 129299, 12358)
@@ -244,13 +277,13 @@ class TestQuadCellDecoder:
         quad_cell_decoder_UUT.decode_brightness_into_direction()
 
         # verify output
-        golden_output = [STEPPER_DIRECTION.PAN_LEFT_TILT_DOWN]
+        golden_output = [STEPPER_DIRECTION.PAN_LEFT]
         test_output = quad_cell_decoder_UUT.get_stepper_controller().view_movement_queue()
         assert len(test_output) == len(golden_output)
         for i in range(0, len(test_output)):
             assert test_output[i] == golden_output[i]
 
-    def test_decode_brightness_into_direction_0011(self):
+    def test_decode_brightness_into_direction_0011(self, setup):
         """ Verify that decode_brightness_into_direction
         properly decodes input (test case: 0011)
 
@@ -258,7 +291,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder()
+        quad_cell_decoder_UUT = QuadCellDecoder(setup)
 
         # create test input
         test_intensities = (36788, 456, 129299, 135000)
@@ -270,13 +303,13 @@ class TestQuadCellDecoder:
         quad_cell_decoder_UUT.decode_brightness_into_direction()
 
         # verify output
-        golden_output = [STEPPER_DIRECTION.TILT_DOWN]
+        golden_output = [STEPPER_DIRECTION.STOP]
         test_output = quad_cell_decoder_UUT.get_stepper_controller().view_movement_queue()
         assert len(test_output) == len(golden_output)
         for i in range(0, len(test_output)):
             assert test_output[i] == golden_output[i]
 
-    def test_decode_brightness_into_direction_0100(self):
+    def test_decode_brightness_into_direction_0100(self, setup):
         """ Verify that decode_brightness_into_direction
         properly decodes input (test case: 0100)
 
@@ -284,7 +317,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder()
+        quad_cell_decoder_UUT = QuadCellDecoder(setup)
 
         # create test input
         test_intensities = (36788, 129299, 456, 12358)
@@ -296,13 +329,13 @@ class TestQuadCellDecoder:
         quad_cell_decoder_UUT.decode_brightness_into_direction()
 
         # verify output
-        golden_output = [STEPPER_DIRECTION.PAN_LEFT_TILT_UP]
+        golden_output = [STEPPER_DIRECTION.PAN_LEFT]
         test_output = quad_cell_decoder_UUT.get_stepper_controller().view_movement_queue()
         assert len(test_output) == len(golden_output)
         for i in range(0, len(test_output)):
             assert test_output[i] == golden_output[i]
 
-    def test_decode_brightness_into_direction_0101(self):
+    def test_decode_brightness_into_direction_0101(self, setup):
         """ Verify that decode_brightness_into_direction
         properly decodes input (test case: 0101)
 
@@ -310,7 +343,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder()
+        quad_cell_decoder_UUT = QuadCellDecoder(setup)
 
         # create test input
         test_intensities = (36788, 129299, 456, 135000)
@@ -328,7 +361,7 @@ class TestQuadCellDecoder:
         for i in range(0, len(test_output)):
             assert test_output[i] == golden_output[i]
 
-    def test_decode_brightness_into_direction_0110(self):
+    def test_decode_brightness_into_direction_0110(self, setup):
         """ Verify that decode_brightness_into_direction
         properly decodes input (test case: 0110)
 
@@ -336,7 +369,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder()
+        quad_cell_decoder_UUT = QuadCellDecoder(setup)
 
         # create test input
         test_intensities = (36788, 129299, 135000, 456)
@@ -354,7 +387,7 @@ class TestQuadCellDecoder:
         for i in range(0, len(test_output)):
             assert test_output[i] == golden_output[i]
 
-    def test_decode_brightness_into_direction_0111(self):
+    def test_decode_brightness_into_direction_0111(self, setup):
         """ Verify that decode_brightness_into_direction
         properly decodes input (test case: 0111)
 
@@ -362,7 +395,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder()
+        quad_cell_decoder_UUT = QuadCellDecoder(setup)
 
         # create test input
         test_intensities = (36788, 129299, 135000, 120000)
@@ -374,13 +407,13 @@ class TestQuadCellDecoder:
         quad_cell_decoder_UUT.decode_brightness_into_direction()
 
         # verify output
-        golden_output = [STEPPER_DIRECTION.PAN_LEFT_TILT_DOWN]
+        golden_output = [STEPPER_DIRECTION.PAN_LEFT]
         test_output = quad_cell_decoder_UUT.get_stepper_controller().view_movement_queue()
         assert len(test_output) == len(golden_output)
         for i in range(0, len(test_output)):
             assert test_output[i] == golden_output[i]
 
-    def test_decode_brightness_into_direction_1000(self):
+    def test_decode_brightness_into_direction_1000(self, setup):
         """ Verify that decode_brightness_into_direction
         properly decodes input (test case: 1000)
 
@@ -388,7 +421,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder()
+        quad_cell_decoder_UUT = QuadCellDecoder(setup)
 
         # create test input
         test_intensities = (129299, 36788, 456, 36788)
@@ -400,13 +433,13 @@ class TestQuadCellDecoder:
         quad_cell_decoder_UUT.decode_brightness_into_direction()
 
         # verify output
-        golden_output = [STEPPER_DIRECTION.PAN_RIGHT_TILT_UP]
+        golden_output = [STEPPER_DIRECTION.PAN_RIGHT]
         test_output = quad_cell_decoder_UUT.get_stepper_controller().view_movement_queue()
         assert len(test_output) == len(golden_output)
         for i in range(0, len(test_output)):
             assert test_output[i] == golden_output[i]
 
-    def test_decode_brightness_into_direction_1001(self):
+    def test_decode_brightness_into_direction_1001(self, setup):
         """ Verify that decode_brightness_into_direction
         properly decodes input (test case: 1001)
 
@@ -414,7 +447,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder()
+        quad_cell_decoder_UUT = QuadCellDecoder(setup)
 
         # create test input
         test_intensities = (129299, 36788, 456, 135000)
@@ -432,7 +465,7 @@ class TestQuadCellDecoder:
         for i in range(0, len(test_output)):
             assert test_output[i] == golden_output[i]
 
-    def test_decode_brightness_into_direction_1010(self):
+    def test_decode_brightness_into_direction_1010(self, setup):
         """ Verify that decode_brightness_into_direction
         properly decodes input (test case: 1010)
 
@@ -440,7 +473,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder()
+        quad_cell_decoder_UUT = QuadCellDecoder(setup)
 
         # create test input
         test_intensities = (129299, 36788, 135000, 456)
@@ -458,7 +491,7 @@ class TestQuadCellDecoder:
         for i in range(0, len(test_output)):
             assert test_output[i] == golden_output[i]
 
-    def test_decode_brightness_into_direction_1011(self):
+    def test_decode_brightness_into_direction_1011(self, setup):
         """ Verify that decode_brightness_into_direction
         properly decodes input (test case: 1011)
 
@@ -466,7 +499,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder()
+        quad_cell_decoder_UUT = QuadCellDecoder(setup)
 
         # create test input
         test_intensities = (129299, 36788, 120000, 135000)
@@ -478,13 +511,13 @@ class TestQuadCellDecoder:
         quad_cell_decoder_UUT.decode_brightness_into_direction()
 
         # verify output
-        golden_output = [STEPPER_DIRECTION.PAN_RIGHT_TILT_DOWN]
+        golden_output = [STEPPER_DIRECTION.PAN_RIGHT]
         test_output = quad_cell_decoder_UUT.get_stepper_controller().view_movement_queue()
         assert len(test_output) == len(golden_output)
         for i in range(0, len(test_output)):
             assert test_output[i] == golden_output[i]
 
-    def test_decode_brightness_into_direction_1100(self):
+    def test_decode_brightness_into_direction_1100(self, setup):
         """ Verify that decode_brightness_into_direction
         properly decodes input (test case: 1100)
 
@@ -492,7 +525,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder()
+        quad_cell_decoder_UUT = QuadCellDecoder(setup)
 
         # create test input
         test_intensities = (129299, 120000, 12358, 36788)
@@ -504,13 +537,13 @@ class TestQuadCellDecoder:
         quad_cell_decoder_UUT.decode_brightness_into_direction()
 
         # verify output
-        golden_output = [STEPPER_DIRECTION.TILT_UP]
+        golden_output = [STEPPER_DIRECTION.STOP]
         test_output = quad_cell_decoder_UUT.get_stepper_controller().view_movement_queue()
         assert len(test_output) == len(golden_output)
         for i in range(0, len(test_output)):
             assert test_output[i] == golden_output[i]
 
-    def test_decode_brightness_into_direction_1101(self):
+    def test_decode_brightness_into_direction_1101(self, setup):
         """ Verify that decode_brightness_into_direction
         properly decodes input (test case: 1101)
 
@@ -518,7 +551,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder()
+        quad_cell_decoder_UUT = QuadCellDecoder(setup)
 
         # create test input
         test_intensities = (129299, 120000, 456, 135000)
@@ -530,13 +563,39 @@ class TestQuadCellDecoder:
         quad_cell_decoder_UUT.decode_brightness_into_direction()
 
         # verify output
-        golden_output = [STEPPER_DIRECTION.PAN_RIGHT_TILT_UP]
+        golden_output = [STEPPER_DIRECTION.PAN_RIGHT]
         test_output = quad_cell_decoder_UUT.get_stepper_controller().view_movement_queue()
         assert len(test_output) == len(golden_output)
         for i in range(0, len(test_output)):
             assert test_output[i] == golden_output[i]
 
-    def test_decode_brightness_into_direction_1111(self):
+    def test_decode_brightness_into_direction_1110(self, setup):
+        """ Verify that decode_brightness_into_direction
+        properly decodes input (test case: 1110)
+
+        @return    None
+        """
+
+        # instantiate the UUT
+        quad_cell_decoder_UUT = QuadCellDecoder(setup)
+
+        # create test input
+        test_intensities = (129299, 120000, 135000, 456)
+
+        # call the function under test
+        quad_cell_decoder_UUT.set_intensity_values(test_intensities)
+        quad_cell_decoder_UUT.compute_quadrant_variance()
+        quad_cell_decoder_UUT.locate_brightest_quadrants()
+        quad_cell_decoder_UUT.decode_brightness_into_direction()
+
+        # verify output
+        golden_output = [STEPPER_DIRECTION.PAN_LEFT]
+        test_output = quad_cell_decoder_UUT.get_stepper_controller().view_movement_queue()
+        assert len(test_output) == len(golden_output)
+        for i in range(0, len(test_output)):
+            assert test_output[i] == golden_output[i]
+
+    def test_decode_brightness_into_direction_1111(self, setup):
         """ Verify that decode_brightness_into_direction
         properly decodes input (test case: 1111)
 
@@ -544,7 +603,7 @@ class TestQuadCellDecoder:
         """
 
         # instantiate the UUT
-        quad_cell_decoder_UUT = QuadCellDecoder()
+        quad_cell_decoder_UUT = QuadCellDecoder(setup)
 
         # create test input
         test_intensities = (129299, 120000, 120456, 135000)
