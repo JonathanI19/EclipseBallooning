@@ -61,17 +61,17 @@ class SolarSensorDecoder:
         Cases:
             Single Quadrant above bright thresh:
                 Q0: Return True
-                Q1: Pan Left
-                Q2: Pan to brightest of Q1 or Q3
-                Q3: Pan Right
+                Q1: Pan Right
+                Q2: Pan Left if Q3 > Q1; Pan Right if Q1 > Q3
+                Q3: Pan Left
 
             Two Quadrants above bright thresh:
-                Q0/Q1: Return True if Q0 Brightest; Else Pan Left
-                Q0/Q2: Return True if Q0 Brightest; Else, rotate through brightest remaining
-                Q0/Q3: Return True if Q0 Brightest; Else Pan Right
-                Q1/Q2: Pan Left
-                Q1/Q3: Pan right or left based on brightest
-                Q2/Q3: Pan Right
+                Q0/Q1: Return True if Q0 Brightest; Else Pan Right
+                Q0/Q2: Return True if Q0 Brightest; Else, Pan Left if Q3 > Q1; Pan Right if Q1 > Q3
+                Q0/Q3: Return True if Q0 Brightest; Else Pan Left
+                Q1/Q2: Pan Right
+                Q1/Q3: Pan Left if Q3 > Q1; Pan Right if Q1 > Q3
+                Q2/Q3: Pan Left
         '''
         
         # self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
@@ -193,21 +193,21 @@ class SolarSensorDecoder:
 
         Cases:
             Single Quadrant below dark thresh:
-                Q0: Pan to darkest of Q1 or Q3
-                Q1: Pan Right
+                Q0: Pan Left if Q1 < Q3; Pan Right if Q3 < Q1
+                Q1: Pan Left
                 Q2: Return True
-                Q3: Pan Left
+                Q3: Pan Right
 
             Two Quadrants above dark thresh:
-                Q0/Q1: Pan Right
-                Q0/Q2: If Q2 darkest, Return True; Else, rotate through darkest remaining
-                Q0/Q3: Pan Left
-                Q1/Q2: Return True if Q2 Darkest; Else pan right
-                Q1/Q3: Pan right or left based on darkest
-                Q2/Q3: Return True if Q2 Darkest; Else Pan Left
+                Q0/Q1: Pan Left
+                Q0/Q2: If Q2 darkest, Return True; Else, Pan Left if Q1 < Q3; Pan Right if Q3 < Q1
+                Q0/Q3: Pan Right
+                Q1/Q2: Return True if Q2 Darkest; Else pan Left
+                Q1/Q3: Pan Left if Q1 < Q3; Pan Right if Q3 < Q1
+                Q2/Q3: Return True if Q2 Darkest; Else Pan Right
         '''   
         
-        print("DARK MODE ENGAGED. PREPARE YOUR ANUS")
+        print("DARK MODE ENGAGED")
         
         # Q0: Pan to darkest of Q1 or Q3
         if (isDark == [True, False, False, False]):
