@@ -194,6 +194,7 @@ def main(args):
                 pass
             # we only perform quad-cell algorithm if camera diode is aligned with (or away from) sun
             if (process_current_adc_data(ssDec, adc_input_vals)):
+                print("Switching to camera control")
                 cProc.set_frame(frame)
                 cProc.convert_frame()
                 cProc.split_frame()
