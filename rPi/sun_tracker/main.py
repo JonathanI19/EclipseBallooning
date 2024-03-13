@@ -10,11 +10,49 @@ from util.streaming import StreamingOutput, StreamingHandler, StreamingServer
 from picamera2 import Picamera2
 import argparse
 import sys
+import serial
 
-def process_current_adc_data(ssCon, adc_vals):
+def process_current_adc_data(ssDec, adc_vals):
 
-    # trigger_quad_cell =  ssCon.decode_brightness_into_action(adc_vals)
-    # return trigger_quad_cell
+    # Calculate max val and theshold based off of max val
+    max_val = max(adc_vals)
+    max_thresh = int(max_val*0.98)
+    thresh_count = 0
+
+    # isDark and isBright lists
+    isDark = [None] * 4
+    isBright = [None] * 4
+
+    # Get number of quadrants above max threshold
+    # Also store bool values of isBright list
+    for i in range(len(adc_vals)):
+        if adc_vals[i] > max_thresh:
+            thresh_count += 1
+            isBright[i] = True
+        else:
+            isBright[i] = False
+            
+    
+    # Use darkest quadrant to calculate movement if thresh_count > 2
+    if thresh_count > 2:
+        
+        # Calcualte min val and threshold based off of min val
+        min_val = min(adc_vals)
+        min_thresh = int(min_val*1.02)
+        
+        # Store bool values of isDark list
+        for i in range(len(adc_vals)):
+            if adc_vals[i] < min_thresh:
+                isDark[i] = True
+            else:
+                isDark[i] = False
+                
+        return ssDec.decode_darkness_into_action(adc_vals, isDark)
+
+    # Otherwise use brightest quadrant
+    else:
+        return ssDec.decode_brightness_into_action(adc_vals, isBright)
+
     pass
 
 
@@ -42,6 +80,10 @@ def main(args):
     STREAM = bool(args.stream)
     QUAD = bool(args.quad)
     GS_IP = args.ip
+
+
+    # Set up serial with 1 second timeout
+    ser = serial.Serial('/dev/ttyUSB0', 9600, timeout = 1)
     
     if DISPLAY is True:
         # Start window thread
@@ -80,7 +122,7 @@ def main(args):
     cProc = CameraProcessor(size)
 
     # Create SolarSensorDecoder object to process ADC values
-    ssCon = SolarSensorDecoder(0, False, sCon)
+    ssDec = SolarSensorDecoder(0, False, sCon)
 
     # Create a QuadCellDecoder object to process the input frame
     qcDec = QuadCellDecoder(sCon)
@@ -98,6 +140,8 @@ def main(args):
         # output the frame
         out.write(frame) 
         
+        ser.reset_input_buffer()
+        
         if DISPLAY is True:
             # The original input frame is shown in the window 
             cv2.imshow('Original', frame)
@@ -114,8 +158,43 @@ def main(args):
             # reset frame count
             frame_count = 0
 
+            # Reset input buffer to only get latest result
+            # ser.reset_input_buffer()
+            
+            line = ser.readline()
+
+            # Remove newline
+            line = line.strip()
+
+            # May need to decode string
+            line = line.decode("utf-8")
+            
+            
+            
+            # Use comma delimiter
+            line = line.split(',')
+            
+            ready = False
+            while len(line)<4 or not ready:
+                line = ser.readline()
+                line = line.strip()
+                line = line.decode("utf-8")
+                line = line.split(',')
+                try:
+                    if int(line[0]) > 92:
+                        ready = True
+                except:
+                    pass
+                
+            
+            try:
+                adc_input_vals = [int(i) for i in line]
+                print(adc_input_vals)
+            except:
+                pass
             # we only perform quad-cell algorithm if camera diode is aligned with (or away from) sun
-            if (process_current_adc_data(sCon, ssCon, (0,0,0,0))):
+            if (process_current_adc_data(ssDec, adc_input_vals)):
+                print("Switching to camera control")
                 cProc.set_frame(frame)
                 cProc.convert_frame()
                 cProc.split_frame()
@@ -157,6 +236,7 @@ def main(args):
                     cv2.imshow("New Frame", new_frame)
             
             # move steppers
+            print(sCon.view_movement_queue())
             sCon.move_steppers()
 
     
