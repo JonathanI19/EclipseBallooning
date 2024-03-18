@@ -74,6 +74,8 @@ class SolarSensorDecoder:
                 Q2/Q3: Pan Left
         '''
         
+        if (input_adc_values == [0,0,0,0]):
+            return True
         # self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_RIGHT)
         # self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.STOP)
         # self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.PAN_LEFT)

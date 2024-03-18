@@ -12,6 +12,16 @@ import argparse
 import sys
 import serial
 
+def connect_to_serial():
+    
+    # Set up serial with 1 second timeout
+    try:
+        ser = serial.Serial('/dev/ttyUSB0', 9600, timeout = 1)
+    except:
+        print("WARNING: Could not connect to Solar Sensor Arduino")
+        ser = None
+    return ser
+
 def process_current_adc_data(ssDec, adc_vals):
 
     # Calculate max val and theshold based off of max val
@@ -80,10 +90,8 @@ def main(args):
     STREAM = bool(args.stream)
     QUAD = bool(args.quad)
     GS_IP = args.ip
-
-
-    # Set up serial with 1 second timeout
-    ser = serial.Serial('/dev/ttyUSB0', 9600, timeout = 1)
+    
+    ser = connect_to_serial()
     
     if DISPLAY is True:
         # Start window thread
@@ -140,7 +148,10 @@ def main(args):
         # output the frame
         out.write(frame) 
         
-        ser.reset_input_buffer()
+        try:
+            ser.reset_input_buffer()
+        except:
+            ser = connect_to_serial()
         
         if DISPLAY is True:
             # The original input frame is shown in the window 
@@ -150,7 +161,10 @@ def main(args):
         if STREAM is True:
             ret,buffer = cv2.imencode(".jpg",frame,[int(cv2.IMWRITE_JPEG_QUALITY),30])
             x_as_bytes = pickle.dumps(buffer)
-            s.sendto((x_as_bytes),(server_ip,server_port))
+            try:
+                s.sendto((x_as_bytes),(server_ip,server_port))
+            except:
+                pass
         
         # Executes brightness evaluation at specified sampling rate
         if(frame_count == (fps//samples_per_second)):
@@ -158,40 +172,44 @@ def main(args):
             # reset frame count
             frame_count = 0
 
-            # Reset input buffer to only get latest result
-            # ser.reset_input_buffer()
-            
-            line = ser.readline()
-
-            # Remove newline
-            line = line.strip()
-
-            # May need to decode string
-            line = line.decode("utf-8")
-            
-            
-            
-            # Use comma delimiter
-            line = line.split(',')
-            
-            ready = False
-            while len(line)<4 or not ready:
-                line = ser.readline()
-                line = line.strip()
-                line = line.decode("utf-8")
-                line = line.split(',')
-                try:
-                    if int(line[0]) > 92:
-                        ready = True
-                except:
-                    pass
-                
+            # Reset adc vals
+            adc_input_vals = [0,0,0,0]
             
             try:
-                adc_input_vals = [int(i) for i in line]
-                print(adc_input_vals)
+                line = ser.readline()
+
+                # Remove newline
+                line = line.strip()
+
+                # May need to decode string
+                line = line.decode("utf-8")
+                
+                
+                
+                # Use comma delimiter
+                line = line.split(',')
+                
+                ready = False
+                while len(line)<4 or not ready:
+                    line = ser.readline()
+                    line = line.strip()
+                    line = line.decode("utf-8")
+                    line = line.split(',')
+                    try:
+                        if int(line[0]) > 92:
+                            ready = True
+                    except:
+                        pass
+                    
+                
+                try:
+                    adc_input_vals = [int(i) for i in line]
+                    print(adc_input_vals)
+                except:
+                    pass
             except:
                 pass
+                
             # we only perform quad-cell algorithm if camera diode is aligned with (or away from) sun
             if (process_current_adc_data(ssDec, adc_input_vals)):
                 print("Switching to camera control")
