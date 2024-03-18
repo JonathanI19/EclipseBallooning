@@ -89,7 +89,7 @@ def main(args):
     
     # start time
     start_time = time.time()
-    end_time = start_time + 120
+    end_time = start_time + 1800
     
     DISPLAY = bool(args.display)
     STREAM = bool(args.stream)
@@ -104,7 +104,7 @@ def main(args):
     
     # Create picam2 object and start collecting data
     picam2 = Picamera2()
-    vid_config = picam2.create_video_configuration(main={"size":(1920,1080)})
+    vid_config = picam2.create_video_configuration(main={"size":(1920,1080)}, controls={"FrameRate": 9})
     picam2.configure(vid_config)
     #vid_config = picam2.create_video_configuration(main={"size":(1920,1080)},lores={"size":(640,480)})
     #picam2.configure(vid_config)
@@ -118,7 +118,7 @@ def main(args):
     size = (frame_width, frame_height) 
     
     # Set fps value and create videoWriter object "out"
-    fps = 30
+    fps = 9
     out = cv2.VideoWriter('/media/eclipse-pi/ECLIPSEUSB/output.mp4', cv2.VideoWriter_fourcc(*'mp4v'), fps, size)
 
     if STREAM is True:
@@ -129,7 +129,7 @@ def main(args):
 
     # Variables for sampling
     frame_count = 0
-    samples_per_second = 30
+    samples_per_second = 3
 
     # Create StepperController object
     sCon = StepperController()
@@ -145,7 +145,9 @@ def main(args):
 
     # loop runs if capturing has been initialized. 
     while(True):
-
+        
+        begin = time.time()
+        
         # reads frames from a camera 
         frame =picam2.capture_array()
         #lores_frame = picam2.capture_array("lores") 
@@ -155,7 +157,7 @@ def main(args):
         frame_count+=1
 
         # output the frame
-        out.write(frame) 
+        out.write(frame)
         
         try:
             ser.reset_input_buffer()
@@ -276,6 +278,10 @@ def main(args):
         # check the timeout condition
         if time.time() > end_time:
             break
+            
+        end = time.time()
+        diff = (end-begin)*1000
+        print('time: {:6.2f} ms | {:5.2f} FPS'.format(diff, 1000/diff ))
     
     # After we release our webcam, we also release the out
     out.release()
