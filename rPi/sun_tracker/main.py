@@ -11,6 +11,7 @@ from picamera2 import Picamera2
 import argparse
 import sys
 import serial
+import time
 
 def connect_to_serial():
     
@@ -85,6 +86,10 @@ def socket_init(ip):
     return s, server_ip, server_port
 
 def main(args):
+    
+    # start time
+    start_time = time.time()
+    end_time = start_time + 1200
     
     DISPLAY = bool(args.display)
     STREAM = bool(args.stream)
@@ -261,6 +266,10 @@ def main(args):
         # Wait for 'a' key to stop the program 
         if cv2.waitKey(1) & 0xFF == ord('a'):
             #qcDec.get_stepper_controller().cleanup()
+            break
+            
+        # check the timeout condition
+        if time.time() > end_time:
             break
     
     # After we release our webcam, we also release the out
