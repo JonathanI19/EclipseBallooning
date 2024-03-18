@@ -41,6 +41,7 @@ def main(args):
     # Risk of data loss if packet dropped
     # TCP is safer but more complex (Consider updating after proof of concept)
     s=socket.socket(socket.AF_INET , socket.SOCK_DGRAM)
+    s.settimeout(5)
 
     # Port that we're exposing
     port=6666
@@ -55,24 +56,34 @@ def main(args):
 
 
     while True:
-        # Receives data from client and temporarily stores in x
-        x=s.recvfrom(1000000)
 
-        # Handling data
-        clientip = x[1][0]
-        data=x[0]
-        data=pickle.loads(data)
-        data = cv2.imdecode(data, cv2.IMREAD_COLOR)
+        try:
+            # Receives data from client and temporarily stores in x
+            x = None
+            try:
+                x=s.recvfrom(1000000)
+            except:
+                print("Connection timeout.")
 
-        # Display image
-        cv2.imshow('received from pi', data)
+            if x is not None:
+                # Handling data
+                clientip = x[1][0]
+                data=x[0]
+                data=pickle.loads(data)
+                data = cv2.imdecode(data, cv2.IMREAD_COLOR)
 
-        out.write(data)
+                # Display image
+                cv2.imshow('received from pi', data)
 
-        # breakout key
-        if cv2.waitKey(1) & 0xFF == ord('a'):
+                out.write(data)
+
+            # breakout key
+            if cv2.waitKey(1) & 0xFF == ord('a'):
+                break
+        except:
             break
 
+    print("Exiting gracefully ...")
     out.release()
     cv2.destroyAllWindows()
 
