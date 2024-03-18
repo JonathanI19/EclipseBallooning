@@ -1,0 +1,7 @@
+Run as background process that is detached from SSH session and produces no output logs:
+
+nohup python main.py -i 192.168.1.176 -s True 1>/dev/null 2>/dev/null &
+
+Kill:
+
+pkill -2 -f "python main.py -i 192.168.2.2 -s True"
