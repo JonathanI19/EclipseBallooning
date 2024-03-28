@@ -293,7 +293,7 @@ class SolarSensorDecoder:
             else:
                 #self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.STOP)    
                 return True
-        
+
             return False
         
         # Q2/Q3: Return True if Q2 Darkest; Else Pan Right

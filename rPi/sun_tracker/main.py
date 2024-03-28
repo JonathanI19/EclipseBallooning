@@ -12,6 +12,7 @@ import argparse
 import sys
 import serial
 import time
+from datetime import datetime
 
 def connect_to_serial():
     
@@ -119,7 +120,12 @@ def main(args):
     
     # Set fps value and create videoWriter object "out"
     fps = 9
-    out = cv2.VideoWriter('/media/eclipse-pi/ECLIPSEUSB/output.mp4', cv2.VideoWriter_fourcc(*'mp4v'), fps, size)
+
+    now = datetime.now()
+    OUTPUT = now.strftime("%d_%m_%Y_%H_%M_%S")
+    OUTPUT = "/media/eclipse-pi/ECLIPSEUSB/" + OUTPUT + ".mp4"
+
+    out = cv2.VideoWriter(OUTPUT, cv2.VideoWriter_fourcc(*'mp4v'), fps, size)
 
     if STREAM is True:
         if (GS_IP == 0):
