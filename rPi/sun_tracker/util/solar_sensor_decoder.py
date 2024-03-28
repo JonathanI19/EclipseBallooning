@@ -101,7 +101,8 @@ class SolarSensorDecoder:
             ########################## IMPORTANT ##########################
             # Backup in case Q1 and Q3 are equal; Pan in direction; Potential for error here
             else:
-                self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.STOP)
+                #self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.STOP)
+                return True
                 
             return False
         
@@ -132,7 +133,8 @@ class SolarSensorDecoder:
                 ########################## IMPORTANT ##########################
                 # Backup in case Q1 and Q3 are equal; Pan in direction; Potential for error here
                 else:
-                    self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.STOP)
+                    #self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.STOP)
+                    return True
                     
                 return False
         
@@ -159,7 +161,8 @@ class SolarSensorDecoder:
             ########################## IMPORTANT ##########################
             # Backup in case Q1 and Q3 are equal; Pan in direction; Potential for error here
             else:
-                self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.STOP)
+                #self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.STOP)
+                return True
                 
             return False
         
@@ -221,7 +224,8 @@ class SolarSensorDecoder:
             ########################## IMPORTANT ##########################
             # Backup in case Q1 and Q3 are equal; Pan in direction; Potential for error here
             else:
-                self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.STOP)
+                #self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.STOP)
+                return True
                 
             return False
             
@@ -258,7 +262,8 @@ class SolarSensorDecoder:
                 ########################## IMPORTANT ##########################
                 # Backup in case Q1 and Q3 are equal; Pan in direction; Potential for error here
                 else:
-                    self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.STOP)
+                    #self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.STOP)
+                    return True
                     
                 return False
         
@@ -286,8 +291,9 @@ class SolarSensorDecoder:
             ########################## IMPORTANT ##########################
             # Backup in case Q1 and Q3 are equal; Pan in direction; Potential for error here
             else:
-                self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.STOP)    
-        
+                #self.__stepper_controller.push_movement_command(STEPPER_DIRECTION.STOP)    
+                return True
+
             return False
         
         # Q2/Q3: Return True if Q2 Darkest; Else Pan Right

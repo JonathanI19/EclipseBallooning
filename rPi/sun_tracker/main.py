@@ -7,11 +7,12 @@ from util.quad_cell_decoder import QuadCellDecoder
 from util.solar_sensor_decoder import SolarSensorDecoder
 from util.stepper_controller import StepperController
 from util.streaming import StreamingOutput, StreamingHandler, StreamingServer
-from picamera2 import Picamera2
+from picamera2 import Picamera2, Preview
 import argparse
 import sys
 import serial
 import time
+from datetime import datetime
 
 def connect_to_serial():
     
@@ -89,7 +90,7 @@ def main(args):
     
     # start time
     start_time = time.time()
-    end_time = start_time + 1200
+    end_time = start_time + 7200
     
     DISPLAY = bool(args.display)
     STREAM = bool(args.stream)
@@ -104,7 +105,10 @@ def main(args):
     
     # Create picam2 object and start collecting data
     picam2 = Picamera2()
-    # picam2.configure(picam2.create_preview_configuration(main={"format": 'XRGB8888', "size": (640, 480)}))
+    vid_config = picam2.create_video_configuration(main={"size":(1920,1080)}, controls={"FrameRate": 9})
+    picam2.configure(vid_config)
+    #vid_config = picam2.create_video_configuration(main={"size":(1920,1080)},lores={"size":(640,480)})
+    #picam2.configure(vid_config)
     picam2.start()
     
     # Get first frame
@@ -115,8 +119,13 @@ def main(args):
     size = (frame_width, frame_height) 
     
     # Set fps value and create videoWriter object "out"
-    fps = 24
-    out = cv2.VideoWriter('output.mp4', cv2.VideoWriter_fourcc(*'mp4v'), fps, size)
+    fps = 9
+
+    now = datetime.now()
+    OUTPUT = now.strftime("%d_%m_%Y_%H_%M_%S")
+    OUTPUT = "/media/eclipse-pi/ECLIPSEUSB/" + OUTPUT + ".mp4"
+
+    out = cv2.VideoWriter(OUTPUT, cv2.VideoWriter_fourcc(*'mp4v'), fps, size)
 
     if STREAM is True:
         if (GS_IP == 0):
@@ -126,7 +135,7 @@ def main(args):
 
     # Variables for sampling
     frame_count = 0
-    samples_per_second = 24
+    samples_per_second = 3
 
     # Create StepperController object
     sCon = StepperController()
@@ -142,16 +151,19 @@ def main(args):
 
     # loop runs if capturing has been initialized. 
     while(True):
-
+        
+        begin = time.time()
+        
         # reads frames from a camera 
-        frame =picam2.capture_array() 
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)        
+        frame =picam2.capture_array()
+        #lores_frame = picam2.capture_array("lores") 
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
         # Keep track of frame_count for sampling
         frame_count+=1
 
         # output the frame
-        out.write(frame) 
+        out.write(frame)
         
         try:
             ser.reset_input_buffer()
@@ -164,7 +176,8 @@ def main(args):
 
         # Execute if streaming flag set
         if STREAM is True:
-            ret,buffer = cv2.imencode(".jpg",frame,[int(cv2.IMWRITE_JPEG_QUALITY),30])
+            #ret,buffer = cv2.imencode(".jpg",lores_frame,[int(cv2.IMWRITE_JPEG_QUALITY),30])
+            ret,buffer = cv2.imencode(".jpg",cv2.resize(frame, dsize=(640,480)),[int(cv2.IMWRITE_JPEG_QUALITY),30])
             x_as_bytes = pickle.dumps(buffer)
             try:
                 s.sendto((x_as_bytes),(server_ip,server_port))
@@ -271,6 +284,10 @@ def main(args):
         # check the timeout condition
         if time.time() > end_time:
             break
+            
+        end = time.time()
+        diff = (end-begin)*1000
+        #print('time: {:6.2f} ms | {:5.2f} FPS'.format(diff, 1000/diff ))
     
     # After we release our webcam, we also release the out
     out.release()
