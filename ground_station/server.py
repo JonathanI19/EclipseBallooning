@@ -50,7 +50,7 @@ def main(args):
     s.bind((GS_IP,port))
 
     # Setting vals
-    fps = 24
+    fps = 9
     size = (640,480)
     out = cv2.VideoWriter(OUTPUT, cv2.VideoWriter_fourcc(*'mp4v'), fps, size)
 
