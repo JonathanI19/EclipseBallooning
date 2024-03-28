@@ -89,7 +89,7 @@ def main(args):
     
     # start time
     start_time = time.time()
-    end_time = start_time + 1800
+    end_time = start_time + 7200
     
     DISPLAY = bool(args.display)
     STREAM = bool(args.stream)
@@ -281,7 +281,7 @@ def main(args):
             
         end = time.time()
         diff = (end-begin)*1000
-        print('time: {:6.2f} ms | {:5.2f} FPS'.format(diff, 1000/diff ))
+        #print('time: {:6.2f} ms | {:5.2f} FPS'.format(diff, 1000/diff ))
     
     # After we release our webcam, we also release the out
     out.release()
