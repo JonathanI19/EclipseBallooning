@@ -1,13 +1,3 @@
-# Module Overview
-
-## Main
-
-**Write up required**
-
-## Utils
-
-**Write up required**
-
 ## SSH
 
 SSH based on code found at https://randomnerdtutorials.com/video-streaming-with-raspberry-pi-camera/
